@@ -1,0 +1,5 @@
+{
+  "port": 5000,
+  "mongoUrl": "mongodb+srv://kostya:UkX2PFhOCGWqKtLE@termproject-xvvso.mongodb.net/app?retryWrites=true&w=majority",
+  "secret": "fe93fb9144cf1530f404a2bffb4aae73"
+}

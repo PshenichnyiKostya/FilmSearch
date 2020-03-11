@@ -1,0 +1,9 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+
+
+.margin-10{
+    margin-right: 10px;
+}
+.padding-nav{
+    padding: 0 2rem;
+}
