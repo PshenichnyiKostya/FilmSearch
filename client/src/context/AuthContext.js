@@ -7,6 +7,5 @@ export const AuthContext = createContext({
     },
     logout: () => {
 
-    },
-    isAuthenticated: false
+    }
 })

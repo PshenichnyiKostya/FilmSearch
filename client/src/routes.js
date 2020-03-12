@@ -4,36 +4,45 @@ import AuthPage from "./pages/AuthPage";
 import FilmsPage from "./pages/FilmsPage";
 import ArtistsPage from "./pages/ArtistsPage";
 import FilmPage from "./pages/FilmPage";
+import WelcomePage from "./pages/WelcomePage";
+
 
 export const useRoutes = (payload) => {
-    if (payload) {
-        if (payload.type === "User") {
-            return (
-                <Switch>
-                    <Route path="/films" exact>
-                        <FilmsPage/>
-                    </Route>
-                    <Route path="/films/:id">
-                        <FilmPage/>
-                    </Route>
-                    <Route path="/artists" exact>
-                        <ArtistsPage/>
-                    </Route>
-
-                    <Route>
-                        <Redirect to='/films'/>
-                    </Route>
-                </Switch>
-            )
-        }
-    } else {
+    function PrivateRoute({children}) {
         return (
-            <Switch>
-                <Route path='/' exact>
-                    <AuthPage/>
-                </Route>
-                <Redirect to='/'/>
-            </Switch>
-        )
+            <Route exact
+                   render={() => {
+                       if (payload) {
+                           return (<Redirect
+                               to={{
+                                   pathname: "/films",
+                               }}
+                           />)
+                       } else {
+                           return children
+                       }
+                   }}
+            />
+        );
     }
+
+    return (<Switch>
+        <Route path="/films/:id">
+            <FilmPage/>
+        </Route>
+        <Route path="/films" exact>
+            <FilmsPage/>
+        </Route>
+        <Route path="/artists" exact>
+            <ArtistsPage/>
+        </Route>
+        <Route path="/" exact>
+            <WelcomePage/>
+        </Route>
+        <PrivateRoute path="/login">
+            <AuthPage/>
+        </PrivateRoute>
+        <Route exact render={() => <Redirect to='/'/>}/>
+    </Switch>)
+
 }
