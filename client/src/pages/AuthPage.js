@@ -2,8 +2,10 @@ import React, {useContext, useEffect, useState} from "react"
 import {useHttp} from "../hooks/http.hook";
 import {useMessage} from "../hooks/message.hook";
 import {AuthContext} from "../context/AuthContext";
+import {useHistory} from "react-router-dom";
 
 const AuthPage = () => {
+    const history = useHistory()
     const auth = useContext(AuthContext)
     const [form, serForm] = useState({
         email: '',
@@ -20,14 +22,9 @@ const AuthPage = () => {
     const changeHandler = (event) => {
         serForm({...form, [event.target.name]: event.target.value})
     }
-
-    const registerHandler = async () => {
-        try {
-            const data = await request('/api/auth/register', 'POST', {...form})
-            message(data.message, "green")
-        } catch (e) {
-
-        }
+    const handleRegisterPage = (event) => {
+        event.preventDefault()
+        history.push('/')
     }
     const loginHandler = async () => {
         try {
@@ -63,12 +60,15 @@ const AuthPage = () => {
                             Войти
                         </button>
                         <button
-                            className="waves-effect waves-light btn"
-                            onClick={registerHandler}
+                            className="waves-effect waves-light btn margin-10"
                             disabled={loading}
+                            onClick={handleRegisterPage}
                         >
-                            Регистрация
+                            На страницу регистрации
                         </button>
+                    </div>
+                    <div className="card-action">
+
                     </div>
                 </div>
             </div>

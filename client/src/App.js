@@ -5,6 +5,7 @@ import {BrowserRouter} from "react-router-dom";
 import {useAuth} from "./hooks/auth.hook";
 import {AuthContext} from "./context/AuthContext";
 import {NavBar} from "./components/NavBar";
+import StickyFooter from "./pages/StickyFooter";
 
 function App() {
     const {login, logout, token, payload} = useAuth()
@@ -21,6 +22,7 @@ function App() {
                 <div className='container'>
                     {routes}
                 </div>
+                <StickyFooter/>
             </BrowserRouter>
         </AuthContext.Provider>
     )
