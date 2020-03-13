@@ -8,9 +8,9 @@ const User = new Schema({
     resetPasswordToken: {type: String},
     resetPasswordExpires: {type: Date},
     type: {type: String, default: "User"},
+    clientName: {type: String, required: true, unique: true},
     email: {type: String, required: true, unique: true},
 })
-
 
 User.virtual("password")
     .set(function (password) {

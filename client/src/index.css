@@ -1,9 +1,14 @@
 @import "~materialize-css/dist/css/materialize.min.css";
 
 
-.margin-10{
+.margin-10 {
     margin-right: 10px;
 }
-.padding-nav{
+
+.padding-nav {
     padding: 0 2rem;
+}
+
+nav {
+    background-color: #607d8b
 }

@@ -1,9 +1,10 @@
 import React from "react"
+import PaginationControlled from "./PaginationControlled";
 
 const FilmsPage = () => {
     return (
         <div>
-            Films
+            <PaginationControlled/>
         </div>
     )
 }

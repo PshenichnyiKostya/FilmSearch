@@ -11,33 +11,50 @@ authRouter.post(
     '/register',
     [
         check('email', ' Некорректный email').isEmail(),
-        check('password', 'Пароль должен содержать как минимум 6 символов').isLength({min: 6}),
+        check('password', 'Пароль как минимум 6 символов').isLength({min: 6}),
+        check('password2', 'Пароль как минимум 6 символов').isLength({min: 6}),
+        check('clientName', 'Имя как минимум 4 символа').isLength({min: 4}),
     ],
     (async (req, res) => {
         try {
-
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: "Некорректные данные при регистрации"
+                    message: "Некорректные данные при регистрации: " + errors.array()[0].msg
                 })
             }
-            const {email, password, type = "User"} = req.body
-            const user = await User.findOne({email})
-            if (user) {
-                return res.status(400).json({message: 'Такой пользователь уже существует'})
+            const {email, password, type = "User", password2, clientName} = req.body
+            const myErrors = []
+
+            await User.findOne({email}).then(user => {
+                if (user) {
+                    myErrors.push({message: 'Такой email уже существует'})
+                }
+            })
+            if (password !== password2) {
+                myErrors.push({message: "Пароли не совпадают"})
+            }
+            await User.findOne({clientName}).then(user => {
+                if (user) {
+                    myErrors.push({message: "Такое имя уже существует"})
+                }
+            })
+            if (myErrors.length > 0) {
+                return res.status(400).json({message: "Некорректные данные при регистрации: " + myErrors[0].message})
             } else {
                 const newUser = new User({
                     email,
                     type,
                     password,
+                    clientName,
                 })
                 const savedUser = await newUser.save()
                 const payload = {
                     id: savedUser._id,
                     type: savedUser.type,
                     email: savedUser.email,
+                    clientName: savedUser.clientName,
                 }
                 const token = jwt.sign(payload, config.get('secret'), {
                     expiresIn: "7d"

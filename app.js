@@ -2,6 +2,7 @@ import express from 'express'
 import config from 'config'
 import mongoose from 'mongoose'
 import authRouter from "./routes/auth"
+import filmRouter from "./routes/films"
 import configurePassport from "./config/password"
 import passport from "passport"
 import bodyParser from 'body-parser'
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 app.use(logger('dev'));
 
 app.use('/api/auth', authRouter);
+app.use('/api/films', filmRouter);
 configurePassport(passport)
 const PORT = config.get('port') || 5000
 

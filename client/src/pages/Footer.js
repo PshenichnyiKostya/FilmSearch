@@ -9,8 +9,8 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                ФильмоПоиск
+            <Link color="inherit" href="https://vk.com/id139428078">
+                Костя Пшеничный
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function StickyFooter(props) {
+export default function Footer(props) {
     const classes = useStyles();
     const {description, title} = props;
 
@@ -44,7 +44,8 @@ export default function StickyFooter(props) {
         </footer>
     );
 }
-StickyFooter.propTypes = {
+
+Footer.propTypes = {
     description: PropTypes.string,
     title: PropTypes.string,
 };

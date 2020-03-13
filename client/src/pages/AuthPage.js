@@ -24,7 +24,7 @@ const AuthPage = () => {
     }
     const handleRegisterPage = (event) => {
         event.preventDefault()
-        history.push('/')
+        history.push('/registration')
     }
     const loginHandler = async () => {
         try {

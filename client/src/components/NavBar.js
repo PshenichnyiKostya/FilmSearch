@@ -14,7 +14,10 @@ export const NavBar = () => {
         e.preventDefault()
         history.push('/login')
     }
-
+    const onRegisterPageHandler = (e) => {
+        e.preventDefault()
+        history.push('/registration')
+    }
     return (
         <nav>
             <div className="nav-wrapper blue-grey darken-1 padding-nav">
@@ -24,8 +27,9 @@ export const NavBar = () => {
                     <li><NavLink to='/films'>Фильмы</NavLink></li>
                     <li><NavLink to='/artists'>Актеры</NavLink></li>
                     {auth.payload && auth.payload.type === "User" &&
-                    <li><a href="#" onClick={logoutHandler}>Выйти</a></li>}
-                    {!auth.payload && <li><a href="#" onClick={loginHandler}>Войти</a></li>}
+                    <li><a href="/" onClick={logoutHandler}>Выйти</a></li>}
+                    {!auth.payload && <li><a href="/" onClick={loginHandler}>Войти</a></li>}
+                    {!auth.payload && <li><a href="/" onClick={onRegisterPageHandler}>Регистрация</a></li>}
                 </ul>
             </div>
         </nav>

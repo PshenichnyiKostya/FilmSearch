@@ -4,6 +4,7 @@ import AuthPage from "./pages/AuthPage";
 import FilmsPage from "./pages/FilmsPage";
 import ArtistsPage from "./pages/ArtistsPage";
 import FilmPage from "./pages/FilmPage";
+import RegistrationPage from "./pages/RegistrationPage";
 import WelcomePage from "./pages/WelcomePage";
 
 
@@ -41,6 +42,9 @@ export const useRoutes = (payload) => {
         </Route>
         <PrivateRoute path="/login">
             <AuthPage/>
+        </PrivateRoute>
+        <PrivateRoute path="/registration">
+            <RegistrationPage/>
         </PrivateRoute>
         <Route exact render={() => <Redirect to='/'/>}/>
     </Switch>)
