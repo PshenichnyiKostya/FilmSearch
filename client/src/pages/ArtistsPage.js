@@ -1,10 +1,28 @@
-import React from "react"
+import React, {useState} from "react"
+import {makeStyles} from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Pagination from "@material-ui/lab/Pagination";
 
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        marginTop: theme.spacing(4),
+        backgroundColor: theme.palette.background.default,
+    },
+}));
 const ArtistsPage = () => {
+    const classes = useStyles();
+    const [page, setPage] = useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
+
     return (
-        <div>
-            Artists
+        <div className={classes.root}>
+            ARTISTS
+            <Typography>Page: {page}</Typography>
+            <Pagination count={10} page={page} onChange={handleChange}/>
         </div>
-    )
+    );
 }
 export default ArtistsPage

@@ -3,7 +3,7 @@ import config from 'config'
 import mongoose from 'mongoose'
 import authRouter from "./routes/auth"
 import filmRouter from "./routes/films"
-import configurePassport from "./config/password"
+import configurePassport from "./middlewares/password"
 import passport from "passport"
 import bodyParser from 'body-parser'
 import logger from "morgan"

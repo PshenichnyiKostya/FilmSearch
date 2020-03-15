@@ -28,24 +28,14 @@ export const useRoutes = (payload) => {
     }
 
     return (<Switch>
-        <Route path="/films/:id">
-            <FilmPage/>
-        </Route>
-        <Route path="/films" exact>
-            <FilmsPage/>
-        </Route>
-        <Route path="/artists" exact>
-            <ArtistsPage/>
-        </Route>
-        <Route path="/" exact>
-            <WelcomePage/>
-        </Route>
+        <Route path="/films/:id" component={FilmPage}/>
+        <Route path="/films" exact component={FilmsPage}/>
+        <Route path="/artists" exact component={ArtistsPage}/>
+        <Route path="/" exact component={WelcomePage}/>
         <PrivateRoute path="/login">
             <AuthPage/>
         </PrivateRoute>
-        <PrivateRoute path="/registration">
-            <RegistrationPage/>
-        </PrivateRoute>
+        <PrivateRoute path="/registration" children={<RegistrationPage/>}/>
         <Route exact render={() => <Redirect to='/'/>}/>
     </Switch>)
 
