@@ -1,4 +1,4 @@
-import {useState, useCallback} from "react";
+import {useCallback, useState} from "react";
 
 export const useHttp = () => {
 
@@ -22,9 +22,8 @@ export const useHttp = () => {
             setLoading(false)
             return data
         } catch (e) {
-            console.log(e)
             setLoading(false)
-            setError(e.message)
+            setError(e.message || "Ошибка. Проверьте подключение к интернету")
             throw e
         }
     }, [])

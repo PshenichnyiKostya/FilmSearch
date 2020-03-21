@@ -3,6 +3,7 @@ import config from 'config'
 import mongoose from 'mongoose'
 import authRouter from "./routes/auth"
 import filmRouter from "./routes/films"
+import artistRouter from "./routes/artists"
 import configurePassport from "./middlewares/password"
 import passport from "passport"
 import bodyParser from 'body-parser'
@@ -14,6 +15,7 @@ app.use(logger('dev'));
 
 app.use('/api/auth', authRouter);
 app.use('/api/films', filmRouter);
+app.use('/api/artists', artistRouter);
 configurePassport(passport)
 const PORT = config.get('port') || 5000
 

@@ -1,11 +1,12 @@
 import React from "react"
-import {Switch, Route, Redirect} from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import FilmsPage from "./pages/FilmsPage";
 import ArtistsPage from "./pages/ArtistsPage";
 import FilmPage from "./pages/FilmPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import WelcomePage from "./pages/WelcomePage";
+import ArtistFilms from "./pages/ArtistFilms";
 
 
 export const useRoutes = (payload) => {
@@ -32,6 +33,7 @@ export const useRoutes = (payload) => {
         <Route path="/films" exact component={FilmsPage}/>
         <Route path="/artists" exact component={ArtistsPage}/>
         <Route path="/" exact component={WelcomePage}/>
+        <Route path="/artists/:artistId/films" render={(props => <ArtistFilms {...props}/>)}/>
         <PrivateRoute path="/login">
             <AuthPage/>
         </PrivateRoute>

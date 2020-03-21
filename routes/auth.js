@@ -21,7 +21,7 @@ authRouter.post(
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: "Некорректные данные при регистрации: " + errors.array()[0].msg
+                    message: "Некорректные данные при регистрации <br/>" + errors.array()[0].msg
                 })
             }
             const {email, password, type = "User", password2, clientName} = req.body
@@ -41,7 +41,7 @@ authRouter.post(
                 }
             })
             if (myErrors.length > 0) {
-                return res.status(400).json({message: "Некорректные данные при регистрации: " + myErrors[0].message})
+                return res.status(400).json({message: "Некорректные данные при регистрации <br/> " + myErrors[0].message})
             } else {
                 const newUser = new User({
                     email,
@@ -78,7 +78,7 @@ authRouter.post('/login',
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: "Некорректные данные при авторизации"
+                    message: "Некорректные данные при авторизации <br/>" + errors.array()[0].msg
                 })
             }
             await passport.authenticate("local", function (err, user, message) {

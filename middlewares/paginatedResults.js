@@ -1,7 +1,6 @@
 export default function (model, limit) {
     return async (req, res, next) => {
         let page = parseInt(req.query.page)
-        // let limit = parseInt(req.query.limit)
         if (page === 0 || isNaN(page)) {
             page = 1
         }

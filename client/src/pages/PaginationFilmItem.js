@@ -1,5 +1,5 @@
 import React from "react"
-import image from '../filmImages/186013_900.jpg'
+import {Link} from 'react-router-dom'
 
 const PaginationFilmItem = ({film}) => {
 
@@ -9,13 +9,13 @@ const PaginationFilmItem = ({film}) => {
                 <div className="card">
                     <div className="card-image waves-effect waves-block waves-light">
                         <img className="activator"
-                             src={image}
+                             src={require(`../filmImages/186013_900.jpg`)}
                              height={400}/>
                     </div>
                     <div className="card-content">
                     <span className="card-title activator grey-text text-darken-4">{film.name}<i
                         className="material-icons right">more_vert</i></span>
-                        <p><a href="#">Подробнее</a></p>
+                        <Link to={`/films/${film._id}`}>Подробнее</Link>
                     </div>
                     <div className="card-reveal">
                     <span className="card-title grey-text text-darken-4">Card Title<i
