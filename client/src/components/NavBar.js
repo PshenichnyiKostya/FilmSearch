@@ -24,8 +24,8 @@ export const NavBar = () => {
                 <a href="/" className="brand-logo">
                     Фильмо Поиск</a>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to='/films'>Фильмы</NavLink></li>
-                    <li><NavLink to='/artists'>Актеры</NavLink></li>
+                    <li><NavLink to='/films?page=1'>Фильмы</NavLink></li>
+                    <li><NavLink to='/artists/?page=1'>Актеры</NavLink></li>
                     {auth.payload && auth.payload.type === "User" &&
                     <li><a href="/" onClick={logoutHandler}>Выйти</a></li>}
                     {!auth.payload && <li><a href="/" onClick={loginHandler}>Войти</a></li>}

@@ -1,12 +1,15 @@
 @import "~materialize-css/dist/css/materialize.min.css";
 /*@import "~materialize-css/dist/css/materialize.css";*/
-
 .margin-10 {
     margin-right: 10px;
 }
 
 .padding-nav {
     padding: 0 2rem;
+}
+
+.padding-film-image {
+    padding: 2.3rem;
 }
 
 nav {

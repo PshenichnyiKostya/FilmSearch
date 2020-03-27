@@ -3,6 +3,7 @@ import {useHttp} from "../hooks/http.hook";
 import {useMessage} from "../hooks/message.hook";
 import {AuthContext} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const AuthPage = () => {
     const history = useHistory()
@@ -38,6 +39,7 @@ const AuthPage = () => {
         <div className='row'>
             <div className="col s6 offset-s3">
                 <h1 className='center'>ФильмоПоиск</h1>
+                {loading && <div className="center"><CircularProgress color="secondary"/></div>}
                 <div className="card blue-grey darken-1">
                     <div className="card-content white-text">
                         <span className="card-title">Авторизация</span>

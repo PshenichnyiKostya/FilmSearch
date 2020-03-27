@@ -10,11 +10,24 @@ artistRouter.get('/', paginatedResults(Artist, 4), async (req, res) => {
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
-
+})
+artistRouter.get('/:artistId', async (req, res) => {
+    try {
+        await Artist.findById(req.params.artistId).populate({
+            path: 'films',
+            select: 'name country year'
+        }).then(artist => {
+            if (!artist) {
+                return res.status(404).json({message: "Актер не найден"})
+            }
+            return res.status(200).json({artist: artist})
+        })
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
 })
 artistRouter.post('/', async (req, res) => {
     const {name} = req.body
-    console.log(req.body)
     const artist = new Artist({
         name,
     })

@@ -6,7 +6,7 @@ import ArtistsPage from "./pages/ArtistsPage";
 import FilmPage from "./pages/FilmPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import WelcomePage from "./pages/WelcomePage";
-import ArtistFilms from "./pages/ArtistFilms";
+import ArtistPage from "./pages/ArtistPage";
 
 
 export const useRoutes = (payload) => {
@@ -17,7 +17,7 @@ export const useRoutes = (payload) => {
                        if (payload) {
                            return (<Redirect
                                to={{
-                                   pathname: "/films",
+                                   pathname: "/welcome",
                                }}
                            />)
                        } else {
@@ -29,11 +29,11 @@ export const useRoutes = (payload) => {
     }
 
     return (<Switch>
-        <Route path="/films/:id" component={FilmPage}/>
+        <Route path="/films/:filmId" component={FilmPage}/>
         <Route path="/films" exact component={FilmsPage}/>
         <Route path="/artists" exact component={ArtistsPage}/>
         <Route path="/" exact component={WelcomePage}/>
-        <Route path="/artists/:artistId/films" render={(props => <ArtistFilms {...props}/>)}/>
+        <Route path="/artists/:artistId" render={(props => <ArtistPage {...props}/>)}/>
         <PrivateRoute path="/login">
             <AuthPage/>
         </PrivateRoute>

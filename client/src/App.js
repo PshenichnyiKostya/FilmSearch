@@ -5,7 +5,7 @@ import {BrowserRouter} from "react-router-dom";
 import {useAuth} from "./hooks/auth.hook";
 import {AuthContext} from "./context/AuthContext";
 import {NavBar} from "./components/NavBar";
-import Footer from "./pages/Footer";
+import Footer from "./components/Footer";
 
 
 function App() {
