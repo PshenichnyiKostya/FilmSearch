@@ -2,7 +2,7 @@ import {model, Schema} from 'mongoose'
 
 const Film = new Schema({
     name: {type: String, required: true},
-    ratings: [{type: Schema.Types.ObjectId, ref: 'Rating', default: []}],
+    rating: {type: Number, default: null},
     artists: [{type: Schema.Types.ObjectId, ref: 'Artist', default: []}],
     country: {type: String, default: "Неизвестно"},
     description: {type: String, default: "Описание отсутствует"},

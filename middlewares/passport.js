@@ -1,13 +1,14 @@
 import LocalStrategy from "passport-local"
 import passportJwt from "passport-jwt"
 import User from '../models/User'
+import jwt from "jsonwebtoken";
 
 import config from 'config'
 
 const JwtStrategy = passportJwt.Strategy
 const ExtractJwt = passportJwt.ExtractJwt
 
-export default (passport) => {
+export default passport => {
     passport.use(
         new LocalStrategy(
             {

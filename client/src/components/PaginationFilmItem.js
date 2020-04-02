@@ -16,8 +16,12 @@ const PaginationFilmItem = ({film}) => {
                              alt={film.name}/>
                     </div>
                     <div className="card-content">
-                    <span className="card-title activator grey-text text-darken-4">{film.name}<i
-                        className="material-icons right">more_vert</i></span>
+                    <span className="card-title activator grey-text text-darken-4">
+                        <p>{film.name}</p>
+                        <p>{film.rating ? film.rating : null} <i className="material-icons">grade</i></p>
+
+                        <i className="material-icons right">more_vert</i>
+                    </span>
                         <Link to={`/films/${film._id}`}>Подробнее</Link>
                     </div>
                     <div className="card-reveal">

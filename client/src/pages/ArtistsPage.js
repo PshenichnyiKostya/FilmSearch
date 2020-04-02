@@ -8,6 +8,7 @@ import {useHistory} from "react-router-dom";
 import queryString from 'query-string';
 import NoItems from "../components/NoItems";
 import Typography from "@material-ui/core/Typography";
+import SortComponentsArtists from "../components/SortComponentsArtists";
 
 
 const useStyles = makeStyles(theme => ({
@@ -20,6 +21,7 @@ const ArtistsPage = ({location}) => {
     const classes = useStyles()
     const [maxPage, setMaxPage] = useState(1)
     const [artists, setArtists] = useState([])
+    const [filter, setFilter] = useState('name')
     const [page, setPage] = useState()
     const {request, loading, error} = useHttp()
     const history = useHistory()
@@ -29,7 +31,8 @@ const ArtistsPage = ({location}) => {
 
         const func = async () => {
             try {
-                const data = await request(`/api/artists?page=${page}`, 'GET')
+                console.log(filter)
+                const data = await request(`/api/artists?page=${page}&sort=${filter}`, 'GET')
                 return data
             } catch (e) {
                 return e.message
@@ -43,16 +46,23 @@ const ArtistsPage = ({location}) => {
         }).catch(() => {
 
         })
-    }, [location.search, request])
+    }, [location.search, request, filter])
 
     const handleChange = (event, value) => {
         history.push(`/artists/?page=${value}`)
     };
 
+    const changeFilter = (value) => {
+        setFilter(value)
+    }
+
     return (
         <div className={classes.root}>
             <div className>
                 {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
+
+                    <SortComponentsArtists parentCallback={changeFilter} filter={filter}/>
+
                     {error ? <NoItems error={error}/> : <div>
                         <ul className="collection">
                             {artists.map(artist =>

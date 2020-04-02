@@ -8,6 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import queryString from "query-string";
 import {useHistory} from "react-router-dom";
 import NoItems from "../components/NoItems";
+import SortComponentFilms from "../components/SortComponentFilms";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,13 +22,14 @@ const FilmsPage = ({location}) => {
     const [films, setFilms] = useState([])
     const {request, loading, error} = useHttp()
     const [page, setPage] = useState()
+    const [filter, setFilter] = useState('rating')
     const history = useHistory()
 
     useEffect(() => {
         const {page} = queryString.parse(location.search)
         const func = async () => {
             try {
-                const data = await request(`/api/films?page=${page}`, 'GET')
+                const data = await request(`/api/films?page=${page}&sort=${filter}`, 'GET')
                 return data
             } catch (e) {
                 return e.message
@@ -40,15 +42,23 @@ const FilmsPage = ({location}) => {
         }).catch(() => {
 
         })
-    }, [location.search,request])
+    }, [location.search, request, filter])
     const handleChange = (event, value) => {
         history.push(`/films/?page=${value}`)
     };
 
+    const changeFilter = (value) => {
+        setFilter(value)
+    }
     return (
         <div className={classes.root}>
             <div>
                 {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
+
+                    {/*<div className='right margin-sort'>*/}
+
+                    {/*</div>*/}
+                    <SortComponentFilms parentCallback={changeFilter} filter={filter}/>
                     {error ? <NoItems error={error}/> : <div>
                         <ul className="collection">
                             {films.map(film =>

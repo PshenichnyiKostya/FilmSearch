@@ -8,7 +8,7 @@ export default function (model, limit) {
         try {
             const resultModels = await model.find().limit(limit).skip(startIndex).exec()
             if (resultModels.length === 0) {
-                return res.status(404).json({message: "Контента на данной странице нет("})
+                return res.status(204).json({message: "Контента на данной странице нет("})
             }
             const size = await model.find().countDocuments()
             res.pagenatedResults = resultModels

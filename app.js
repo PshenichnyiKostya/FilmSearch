@@ -4,19 +4,25 @@ import mongoose from 'mongoose'
 import authRouter from "./routes/auth"
 import filmRouter from "./routes/films"
 import artistRouter from "./routes/artists"
-import configurePassport from "./middlewares/password"
-import passport from "passport"
+import configurePassport from "./middlewares/passport"
 import bodyParser from 'body-parser'
 import logger from "morgan"
+import cors from "cors";
+import passport from "passport";
+
+configurePassport(passport)
 
 const app = express()
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+app.use(cors());
+app.use(passport.initialize());
+
 app.use('/api/auth', authRouter);
 app.use('/api/films', filmRouter);
 app.use('/api/artists', artistRouter);
-configurePassport(passport)
+
 const PORT = config.get('port') || 5000
 
 async function start() {
