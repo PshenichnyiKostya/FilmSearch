@@ -16,7 +16,6 @@ function App() {
         <AuthContext.Provider value={{
             login, logout, token, payload
         }}>
-
             <BrowserRouter>
                 {<NavBar/>}
                 <div className='container'>

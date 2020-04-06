@@ -7,7 +7,6 @@ artistRouter.get('/', async (req, res) => {
     const limit = 4
     try {
         const filterParam = req.query.sort
-        console.log(filterParam)
         let page = parseInt(req.query.page)
         if (page === 0 || isNaN(page)) {
             return res.status(404).json({message: "Контента на данной странице нет("})
@@ -23,7 +22,10 @@ artistRouter.get('/', async (req, res) => {
                     resultModels = await Artist.find().sort('birthday').limit(limit).skip(startIndex).populate('films')
                     break
                 case 'filmsCount':
-                    resultModels = await Artist.find().sortByCount('films').limit(limit).skip(startIndex).populate('films')
+                    resultModels = await Artist.find().sort('-films').limit(limit).skip(startIndex).populate('films')
+                    break
+                case 'clicks':
+                    resultModels = await Artist.find().sort('-clicks').limit(limit).skip(startIndex).populate('films')
                     break
                 default:
                     resultModels = await Artist.find().limit(limit).skip(startIndex).populate('films')
@@ -46,10 +48,10 @@ artistRouter.get('/', async (req, res) => {
 })
 artistRouter.get('/:artistId', async (req, res) => {
     try {
-        await Artist.findById(req.params.artistId).populate({
+        await Artist.findByIdAndUpdate(req.params.artistId, {$inc: {clicks: 1}}).populate({
             path: 'films',
             select: 'name country year rating'
-        }).then(artist => {
+        }).then(async artist => {
             if (!artist) {
                 return res.status(404).json({message: "Актер не найден"})
             }

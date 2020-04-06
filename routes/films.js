@@ -28,6 +28,9 @@ filmRouter.get('/', async (req, res) => {
                 case 'date':
                     resultModels = await Film.find().sort('-year').limit(limit).skip(startIndex).populate('relatedMovies', 'name')
                     break
+                case 'clicks':
+                    resultModels = await Film.find().sort('-clicks').limit(limit).skip(startIndex).populate('relatedMovies', 'name')
+                    break
                 default:
                     resultModels = await Film.find().limit(limit).skip(startIndex).populate('relatedMovies', 'name')
             }
@@ -60,7 +63,7 @@ filmRouter.post('/:artistId', async (req, res) => {
 })
 filmRouter.get('/:filmId', async (req, res) => {
     try {
-        await Film.findById(req.params.filmId).populate({
+        await Film.findByIdAndUpdate(req.params.filmId, {$inc: {clicks: 1}}).populate({
             path: 'relatedMovies',
             select: 'name'
         }).then(film => {
@@ -76,7 +79,6 @@ filmRouter.get('/:filmId', async (req, res) => {
 filmRouter.post('/ratings/:filmId', passport.authenticate("jwt"), async (req, res) => {
     if (req.user) {
         try {
-            console.log(req.user)
             if (req.body.mark < 1 || req.body.mark > 10) {
                 return res.status(400).json({message: "Оценка должна быть от 1 до 10"})
             }

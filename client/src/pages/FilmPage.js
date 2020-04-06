@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {useHttp} from "../hooks/http.hook";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {makeStyles} from "@material-ui/core/styles";
 import {Carousel} from "react-responsive-carousel";
+import {AuthContext} from "../context/AuthContext";
+import CommentsList from "../components/CommentsList";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,6 +18,9 @@ const FilmPage = ({...props}) => {
     const classes = useStyles()
     const [film, setFilm] = useState([])
     const {request, loading, error} = useHttp()
+    const [bodyComment, setBodyComment] = useState('')
+    const {payload, token} = useContext(AuthContext)
+
     useEffect(() => {
         let elems = document.querySelectorAll('.carousel');
         window.M.Carousel.init(elems, {indicators: true, duration: 100, fullWidth: false, shift: 20});
@@ -28,6 +33,24 @@ const FilmPage = ({...props}) => {
             setFilm(r.film)
         })
     }, [props.match.params, request])
+
+
+    const handleComment = async () => {
+        try {
+            const data = await request('/api/comments/', 'POST', {
+                bodyComment, headers: {
+                    'Authorization':
+                        `JWT ${token}`
+                }
+            })
+        } catch (e) {
+
+        }
+    }
+
+    const handleBodyComment = (event) => {
+        setBodyComment(event.target.value)
+    }
 
     return (
         <div className={classes.root}>
@@ -46,7 +69,7 @@ const FilmPage = ({...props}) => {
                                         <li className="collection-item">
                                             <p>Cтрана: {film.country}</p>
                                         </li>
-                                        <li className="collection-item">
+                                        <li className='collection-item'>
                                             <p>Год: {film.year ? film.year : "Неизвестно"}</p>
                                         </li>
                                     </ul>
@@ -57,38 +80,34 @@ const FilmPage = ({...props}) => {
                         <div className="card-panel teal blue-grey darken-1 white-text">Описание: <br/>{film.description}
                         </div>
                         }
-                        {film.relatedMovies && film.relatedMovies.length > 0 ? <div className='center'>
+                        {film.relatedMovies && film.relatedMovies.length > 0 ? <div className='center margin-top-15'>
                             <h4>Похожие фильмы</h4>
                             <Carousel showThumbs={false} showStatus={false} infiniteLoop={true}>
-                                {film.relatedMovies.map(film => <div>
+                                {film.relatedMovies.map(film => <div key={film._id}>
                                     <img src={require(`../filmImages/186013_900.jpg`)}/>
                                     <p className="legend">{film.name}</p>
                                 </div>)}
-                            </Carousel></div> : <div>Похожих фильмов не найдено</div>
-                        }
+                            </Carousel></div> : null}
+                        <React.Fragment>
+                            <form method="post">
+                                <div className="form-group center">
+                                <textarea
+                                    className="form-control"
+                                    placeholder="🤬 Твой комментрий"
+                                    name="message"
+                                    onChange={handleBodyComment}
+                                />
+                                </div>
+
+                                <div className="form-group">
+                                    <button disabled={loading} className="btn btn-primary" onClick={handleComment}>
+                                        Отправить &#10148;
+                                    </button>
+                                </div>
+                            </form>
+                        </React.Fragment>
+                        <CommentsList filmId={props.match.params.filmId}/>
                     </div>}
-                {/*{film.relatedMovies &&*/}
-                {/*<div className="carousel carousel-slider center">*/}
-                {/*    <div className="carousel-fixed-item center">*/}
-                {/*        <a href='#qwe' className="btn waves-effect white grey-text darken-text-2">Перейти к фильму</a>*/}
-                {/*    </div>*/}
-                {/*    <div className="carousel-item red white-text" href="#one!">*/}
-                {/*        <h2>First Panel</h2>*/}
-                {/*        <p className="white-text">This is your first panel</p>*/}
-                {/*    </div>*/}
-                {/*</div>}*/}
-                {/* {film.relatedMovies && film.relatedMovies.length > 0 ?
-                    <div className="carousel carousel-slider center">
-                        <div className="carousel-fixed-item center">
-                            <a className="btn waves-effect white grey-text darken-text-2">Перейти к фильму</a>
-                        </div>
-                        <div className="carousel-item red white-text" href="#one!">
-                            <h2>First Panel</h2>
-                            <p className="white-text">This is your first panel</p>
-                        </div>
-                    </div>
-                    : <div>Похожих фильмов не найдено</div>
-                }*/}
             </div>
         </div>
 

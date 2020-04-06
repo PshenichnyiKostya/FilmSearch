@@ -9,6 +9,7 @@ import bodyParser from 'body-parser'
 import logger from "morgan"
 import cors from "cors";
 import passport from "passport";
+import commentsRouter from "./routes/comments";
 
 configurePassport(passport)
 
@@ -22,6 +23,7 @@ app.use(passport.initialize());
 app.use('/api/auth', authRouter);
 app.use('/api/films', filmRouter);
 app.use('/api/artists', artistRouter);
+app.use('/api/comments', commentsRouter);
 
 const PORT = config.get('port') || 5000
 
@@ -31,6 +33,7 @@ async function start() {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
+            useFindAndModify: false
         })
         app.listen(PORT, () => {
             console.log(`Server has been started on PORT ${PORT}...`)

@@ -54,10 +54,6 @@ const FilmsPage = ({location}) => {
         <div className={classes.root}>
             <div>
                 {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
-
-                    {/*<div className='right margin-sort'>*/}
-
-                    {/*</div>*/}
                     <SortComponentFilms parentCallback={changeFilter} filter={filter}/>
                     {error ? <NoItems error={error}/> : <div>
                         <ul className="collection">

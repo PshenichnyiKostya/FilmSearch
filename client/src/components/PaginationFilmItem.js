@@ -29,14 +29,6 @@ const PaginationFilmItem = ({film}) => {
                             <i className="material-icons right">close</i></span>
                         <h3>О фильме</h3>
                         <h6><p>{film.description}</p></h6>
-                        {/*{film.relatedMovies.length > 0 ?*/}
-                        {/*    <Carousel showThumbs={false} showStatus={false} infiniteLoop={true}>*/}
-                        {/*        <div>*/}
-                        {/*            <img src={require(`../filmImages/186013_900.jpg`)}/>*/}
-                        {/*            <p className="legend">Legend 1</p>*/}
-                        {/*        </div>*/}
-                        {/*    </Carousel> : <div>Похожих фильмов не найдено</div>*/}
-                        {/*}*/}
                     </div>
                 </div>
 

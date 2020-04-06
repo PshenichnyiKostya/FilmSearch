@@ -87,9 +87,9 @@ authRouter.post('/login',
                 } else {
                     const payload = {
                         id: user._id,
-                        name: user.name,
+                        clientName: user.clientName,
                         type: user.type,
-                        login: user.login
+                        email: user.email
                     }
                     const token = jwt.sign(payload, config.get('secret'), {
                         expiresIn: "7d"

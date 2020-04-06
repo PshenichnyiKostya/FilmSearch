@@ -9,12 +9,12 @@ import WelcomePage from "./pages/WelcomePage";
 import ArtistPage from "./pages/ArtistPage";
 
 
-export const useRoutes = (payload) => {
+export const useRoutes = (isUser) => {
     function PrivateRoute({children}) {
         return (
             <Route exact
                    render={() => {
-                       if (payload) {
+                       if (isUser) {
                            return (<Redirect
                                to={{
                                    pathname: "/welcome",

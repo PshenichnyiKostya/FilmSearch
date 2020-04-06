@@ -1,9 +1,26 @@
 @import "~materialize-css/dist/css/materialize.min.css";
-/*@import "~materialize-css/dist/css/materialize.css";*/
+@import "~materialize-css/dist/css/materialize.css";
+/*@import '~bootstrap/dist/css/bootstrap.min.css';*/
 .margin-10 {
     margin-right: 10px;
 }
-
+/*.my-4 {*/
+/*    margin-top: 1.5rem!important;*/
+/*    margin-bottom: 1.5rem!important;*/
+/*}*/
+.list-unstyled{padding-left:0;list-style:none}
+.media {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: start;
+    align-items: flex-start;
+}
+.media-body {
+    -ms-flex: 1;
+    flex: 1;
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem!important;
+}
 .padding-nav {
     padding: 0 2rem;
 }
@@ -24,4 +41,11 @@ nav {
 
 .margin-sort {
     margin-left: 5rem;
+}
+.margin-top-15{
+    margin-bottom: 1.5rem;
+}
+
+.avatar-img {
+    border: solid 1px #4d4a4e;
 }

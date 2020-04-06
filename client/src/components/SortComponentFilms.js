@@ -56,6 +56,7 @@ export default function SortComponentFilms({parentCallback, filter}) {
                     <MenuItem value='rating'>По рейтингу</MenuItem>
                     <MenuItem value='name'>По имени</MenuItem>
                     <MenuItem value='date'>По дате</MenuItem>
+                    <MenuItem value='clicks'>По популярности</MenuItem>
                 </Select>
             </FormControl>
         </div>

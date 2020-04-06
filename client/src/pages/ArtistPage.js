@@ -77,8 +77,7 @@ const ArtistPage = ({...props}) => {
                                         {artist.films.map(film =>
                                             <Link to={`/films/${film._id}`}>
                                                 <li className="collection-item avatar grey-text" key={film._id}>
-                                                    <i className="material-icons circle green">local_movies
-                                                    </i>
+                                                    <i className="material-icons circle green">local_movies</i>
                                                     <span className="title">Название: {film.name}</span>
                                                     <p>Страна: {film.country}<br/>
                                                         Год: {film.year}
