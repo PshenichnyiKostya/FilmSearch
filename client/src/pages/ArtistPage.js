@@ -4,6 +4,9 @@ import {useHttp} from "../hooks/http.hook";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import NoItems from "../components/NoItems";
 import {Link} from "react-router-dom";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -42,6 +45,7 @@ const ArtistPage = ({...props}) => {
 
     return (
         <div className={classes.root}>
+
             <div>
                 {loading ? <div className='center'><CircularProgress color="secondary"/></div> :
                     <div>

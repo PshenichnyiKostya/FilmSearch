@@ -1,11 +1,10 @@
 import React from "react"
-import {green, lightGreen} from "@material-ui/core/colors";
 
 const Comment = ({comment}) => {
 
     const MONTH_NAMES = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня',
+        'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'
     ];
 
 
@@ -17,34 +16,28 @@ const Comment = ({comment}) => {
         let minutes = date.getMinutes();
 
         if (minutes < 10) {
-            // Adding leading zero to minutes
             minutes = `0${minutes}`;
         }
 
         if (prefomattedDate) {
-            // Today at 10:20
-            // Yesterday at 10:20
-            return `${prefomattedDate} at ${hours}:${minutes}`;
+            return `${prefomattedDate} в ${hours}:${minutes}`;
         }
 
         if (hideYear) {
-            // 10. January at 10:20
-            return `${day}. ${month} at ${hours}:${minutes}`;
+            return `${day} ${month} в ${hours}:${minutes}`;
         }
 
-        // 10. January 2017. at 10:20
-        return `${day}. ${month} ${year}. at ${hours}:${minutes}`;
+        return `${day} ${month} ${year} в ${hours}:${minutes}`;
     }
 
 
-// --- Main function
     function timeAgo(dateParam) {
         if (!dateParam) {
             return null;
         }
 
         const date = typeof dateParam === 'object' ? dateParam : new Date(dateParam);
-        const DAY_IN_MS = 86400000; // 24 * 60 * 60 * 1000
+        const DAY_IN_MS = 86400000;
         const today = new Date();
         const yesterday = new Date(today - DAY_IN_MS);
         const seconds = Math.round((today - date) / 1000);
@@ -57,20 +50,25 @@ const Comment = ({comment}) => {
         if (seconds < 5) {
             return 'now';
         } else if (seconds < 60) {
-            return `${seconds} seconds ago`;
+            return `${seconds} секунд назад`;
         } else if (seconds < 90) {
-            return 'about a minute ago';
+            return 'минуту назад';
         } else if (minutes < 60) {
-            return `${minutes} minutes ago`;
+            if (minutes % 10 === 2 || minutes % 10 === 3 || minutes % 10 === 4)
+                return `${minutes} минуты назад`;
+            if (minutes % 10 === 1) {
+                return `${minutes} минуту назад`;
+            }
+            return `${minutes} минут назад`;
         } else if (isToday) {
-            return getFormattedDate(date, 'Today'); // Today at 10:20
+            return getFormattedDate(date, 'сегодня');
         } else if (isYesterday) {
-            return getFormattedDate(date, 'Yesterday'); // Yesterday at 10:20
+            return getFormattedDate(date, 'вчера');
         } else if (isThisYear) {
-            return getFormattedDate(date, false, true); // 10. January at 10:20
+            return getFormattedDate(date, false, true);
         }
 
-        return getFormattedDate(date); // 10. January 2017. at 10:20
+        return getFormattedDate(date);
     }
 
     return (

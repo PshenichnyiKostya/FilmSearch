@@ -5,6 +5,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Carousel} from "react-responsive-carousel";
 import {AuthContext} from "../context/AuthContext";
 import CommentsList from "../components/CommentsList";
+import {useMessage} from "../hooks/message.hook";
+import BeautyStars from "beauty-stars";
+import {RadioGroup} from "@material-ui/core";
+import RatingFilm from "../components/RatingFilm";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -16,10 +20,17 @@ const useStyles = makeStyles(theme => ({
 const FilmPage = ({...props}) => {
 
     const classes = useStyles()
+
     const [film, setFilm] = useState([])
-    const {request, loading, error} = useHttp()
+    const {request, loading, error, clearError} = useHttp()
+    const message = useMessage()
     const [bodyComment, setBodyComment] = useState('')
     const {payload, token} = useContext(AuthContext)
+
+    useEffect(() => {
+        message(error, "red")
+        clearError()
+    }, [error, message, clearError])
 
     useEffect(() => {
         let elems = document.querySelectorAll('.carousel');
@@ -34,23 +45,12 @@ const FilmPage = ({...props}) => {
         })
     }, [props.match.params, request])
 
+    useEffect(() => {
+        message(error, "red")
+        clearError()
+    }, [error, message, clearError])
 
-    const handleComment = async () => {
-        try {
-            const data = await request('/api/comments/', 'POST', {
-                bodyComment, headers: {
-                    'Authorization':
-                        `JWT ${token}`
-                }
-            })
-        } catch (e) {
 
-        }
-    }
-
-    const handleBodyComment = (event) => {
-        setBodyComment(event.target.value)
-    }
 
     return (
         <div className={classes.root}>
@@ -74,12 +74,18 @@ const FilmPage = ({...props}) => {
                                         </li>
                                     </ul>
                                 </div>
+                                <div className="card-content">
+                                    <h5>Твоя оценка</h5>
+                                    <RatingFilm filmId={props.match.params.filmId}/>
+                                </div>
+
                             </div>
                         </div>
                         {film.description &&
                         <div className="card-panel teal blue-grey darken-1 white-text">Описание: <br/>{film.description}
                         </div>
                         }
+
                         {film.relatedMovies && film.relatedMovies.length > 0 ? <div className='center margin-top-15'>
                             <h4>Похожие фильмы</h4>
                             <Carousel showThumbs={false} showStatus={false} infiniteLoop={true}>
@@ -88,24 +94,8 @@ const FilmPage = ({...props}) => {
                                     <p className="legend">{film.name}</p>
                                 </div>)}
                             </Carousel></div> : null}
-                        <React.Fragment>
-                            <form method="post">
-                                <div className="form-group center">
-                                <textarea
-                                    className="form-control"
-                                    placeholder="🤬 Твой комментрий"
-                                    name="message"
-                                    onChange={handleBodyComment}
-                                />
-                                </div>
 
-                                <div className="form-group">
-                                    <button disabled={loading} className="btn btn-primary" onClick={handleComment}>
-                                        Отправить &#10148;
-                                    </button>
-                                </div>
-                            </form>
-                        </React.Fragment>
+
                         <CommentsList filmId={props.match.params.filmId}/>
                     </div>}
             </div>

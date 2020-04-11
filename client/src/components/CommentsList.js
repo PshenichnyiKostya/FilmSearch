@@ -5,6 +5,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import {makeStyles} from "@material-ui/core/styles";
 import {useHttp} from "../hooks/http.hook";
 import NoItems from "./NoItems";
+import BodyComment from "./BodyComment";
 
 
 const useStyles = makeStyles(theme => ({
@@ -21,9 +22,17 @@ const CommentsList = ({filmId}) => {
     const [maxPage, setMaxPage] = useState(1)
     const [comments, setComments] = useState([])
     const {request, loading, error} = useHttp()
+    const {reload, setReload} = useState(false)
 
     const handleChange = (event, value) => {
         setCommentPage(value)
+    }
+
+    const handleComments = (comment) => {
+        const newComments = comments.slice()
+        newComments.pop()
+        newComments.unshift(comment)
+        setComments(newComments)
     }
     useEffect(() => {
         const func = async () => {
@@ -41,9 +50,11 @@ const CommentsList = ({filmId}) => {
         }).catch(() => {
 
         })
-    }, [request,commentPage])
+    }, [request, commentPage, reload])
+
     return (
         <div>
+            <BodyComment filmId={filmId} setComments={handleComments}/>
             {!loading ? (<div>
                 {error ? <NoItems error={error}/> : <div>
                     <ul className="list-unstyled">

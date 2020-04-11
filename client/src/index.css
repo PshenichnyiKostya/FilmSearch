@@ -1,6 +1,4 @@
 @import "~materialize-css/dist/css/materialize.min.css";
-@import "~materialize-css/dist/css/materialize.css";
-/*@import '~bootstrap/dist/css/bootstrap.min.css';*/
 .margin-10 {
     margin-right: 10px;
 }
@@ -48,4 +46,21 @@ nav {
 
 .avatar-img {
     border: solid 1px #4d4a4e;
+}
+
+/*textarea {*/
+/*    resize: none;*/
+/*}*/
+
+.film-rating{
+    color: #ffb400 ;
+    cursor: pointer;
+    display: inline-flex;
+    position: relative;
+    font-size: 1.5rem;
+    text-align: left;
+}
+.delete-film{
+    cursor: pointer;
+    color: #999 ;
 }

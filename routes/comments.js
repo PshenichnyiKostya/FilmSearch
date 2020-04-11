@@ -1,6 +1,7 @@
 import {Router} from 'express'
 import Comment from "../models/Comment";
 import passport from "passport";
+import User from "../models/User";
 import Film from "../models/Film";
 
 const commentsRouter = Router()
@@ -8,14 +9,13 @@ const commentsRouter = Router()
 commentsRouter.get('/:filmId', async (req, res) => {
     const limit = 2
     try {
-        console.log(req.params.filmId)
         let page = parseInt(req.query.page)
         if (page <= 0 || isNaN(page)) {
             return res.status(404).json({message: "Комментарии не найдены"})
         }
         const startIndex = (page - 1) * limit
         try {
-            let resultModels = await Comment.find({film: req.params.filmId}).limit(limit).skip(startIndex).populate('user', 'clientName')
+            let resultModels = await Comment.find({film: req.params.filmId}).limit(limit).skip(startIndex).sort('-timestamp').populate('user', 'clientName')
 
             if (resultModels.length === 0) {
                 return res.status(404).json({message: "Комментарии не найдены"})
@@ -32,7 +32,33 @@ commentsRouter.get('/:filmId', async (req, res) => {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
-commentsRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
-
+commentsRouter.post('/:filmId', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        console.log(req.user)
+        if (req.body.bodyComment.length > 500) {
+            return res.status(400).json({message: "Максимальная длина комментария 500 символов"})
+        }
+        if (req.body.bodyComment.length === 0) {
+            return res.status(400).json({message: "Пожалуйста, введите комментарий в текстовое поле"})
+        }
+        const user = await User.findById(req.user)
+        if (!user) {
+            return res.status(401).json({message: "Вы не авторизованы"})
+        }
+        const film = await Film.findById(req.params.filmId)
+        if (!film) {
+            return res.status(400).json({message: "Фильм не найден"})
+        }
+        const comment = new Comment({
+            body: req.body.bodyComment,
+            user,
+            film,
+            timestamp: new Date()
+        })
+        await comment.save()
+        return res.status(200).json({message: "Комментрий успешно добавлен", comment: comment})
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
 })
 export default commentsRouter

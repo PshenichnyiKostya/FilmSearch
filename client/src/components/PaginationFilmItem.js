@@ -18,7 +18,7 @@ const PaginationFilmItem = ({film}) => {
                     <div className="card-content">
                     <span className="card-title activator grey-text text-darken-4">
                         <p>{film.name}</p>
-                        <p>{film.rating ? film.rating : null} <i className="material-icons">grade</i></p>
+                        <p>{film.rating ? film.rating.toFixed(1) : null} <i className="material-icons">grade</i></p>
 
                         <i className="material-icons right">more_vert</i>
                     </span>

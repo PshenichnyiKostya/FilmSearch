@@ -77,37 +77,34 @@ filmRouter.get('/:filmId', async (req, res) => {
     }
 })
 filmRouter.post('/ratings/:filmId', passport.authenticate("jwt"), async (req, res) => {
-    if (req.user) {
-        try {
-            if (req.body.mark < 1 || req.body.mark > 10) {
-                return res.status(400).json({message: "Оценка должна быть от 1 до 10"})
-            }
-            const film = await Film.findById(req.params.filmId)
-            if (!film) {
-                return res.status(400).json({message: "Фильм не найден"})
-            }
-            const rating = await Rating.findOne({user: req.user, film: req.params.filmId})
-            if (rating) {
-                return res.status(400).json({message: "Оценка уже выставлена"})
-            }
-            const user = await User.findById(req.user)
-            const newRating = new Rating({
-                mark: req.body.mark,
-                user,
-                film,
-            })
-            const numRatings = await Rating.find({film: req.params.filmId}).countDocuments()
-            const totalRating = (req.body.mark - (film.rating !== null ? film.rating : 0)) / (numRatings + 1) + (film.rating !== null ? film.rating : 0)
-            await film.updateOne({
-                rating: totalRating
-            })
-            await newRating.save()
-            return res.status(200).json({message: "Оценка добавлена", mark: req.body.mark, totalRating: totalRating})
-        } catch (e) {
-            return res.status(500).json({message: "Что-то пошло не так!("})
+    try {
+        if (req.body.mark < 1 || req.body.mark > 10) {
+            return res.status(400).json({message: "Оценка должна быть от 1 до 10"})
         }
-    } else {
-        return res.status(401).json({message: "Вы не авторизировались на сайте"})
+        const film = await Film.findById(req.params.filmId)
+        if (!film) {
+            return res.status(400).json({message: "Фильм не найден"})
+        }
+        const rating = await Rating.findOne({user: req.user, film: req.params.filmId})
+        if (rating) {
+            return res.status(400).json({message: "Оценка уже выставлена"})
+        }
+        const user = await User.findById(req.user)
+        const newRating = new Rating({
+            mark: req.body.mark,
+            user,
+            film,
+        })
+        const numRatings = await Rating.find({film: req.params.filmId}).countDocuments()
+        const totalRating = (req.body.mark - (film.rating !== null ? film.rating : 0)) / (numRatings + 1) + (film.rating !== null ? film.rating : 0)
+        await film.updateOne({
+            rating: totalRating
+        })
+        await newRating.save()
+        return res.status(200).json({message: "Оценка добавлена", mark: req.body.mark, totalRating: totalRating})
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
     }
+
 })
 export default filmRouter
