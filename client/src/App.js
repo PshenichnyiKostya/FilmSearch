@@ -10,8 +10,8 @@ import Footer from "./components/Footer";
 
 function App() {
     const {login, logout, token, payload} = useAuth()
-    const isUser = payload ? payload.type === "User" : false
-    const routes = useRoutes(isUser)
+    const user = payload ? payload.type : null
+    const routes = useRoutes(user)
     return (
         <AuthContext.Provider value={{
             login, logout, token, payload

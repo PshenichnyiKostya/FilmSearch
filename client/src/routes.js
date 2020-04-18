@@ -7,17 +7,19 @@ import FilmPage from "./pages/FilmPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import WelcomePage from "./pages/WelcomePage";
 import ArtistPage from "./pages/ArtistPage";
+import UploadPage from "./pages/UploadPage";
 
 
-export const useRoutes = (isUser) => {
-    function PrivateRoute({children}) {
+export const useRoutes = (user) => {
+
+    function UnauthorizedRoute({children}) {
         return (
             <Route exact
                    render={() => {
-                       if (isUser) {
+                       if (user) {
                            return (<Redirect
                                to={{
-                                   pathname: "/welcome",
+                                   pathname: "/",
                                }}
                            />)
                        } else {
@@ -25,7 +27,25 @@ export const useRoutes = (isUser) => {
                        }
                    }}
             />
-        );
+        )
+    }
+
+    function AdminRoute({children}) {
+        return (
+            <Route exact
+                   render={() => {
+                       if (user !== "Admin") {
+                           return (<Redirect
+                               to={{
+                                   pathname: "/",
+                               }}
+                           />)
+                       } else {
+                           return children
+                       }
+                   }}
+            />
+        )
     }
 
     return (<Switch>
@@ -34,11 +54,14 @@ export const useRoutes = (isUser) => {
         <Route path="/artists" exact component={ArtistsPage}/>
         <Route path="/" exact component={WelcomePage}/>
         <Route path="/artists/:artistId" render={(props => <ArtistPage {...props}/>)}/>
-        <PrivateRoute path="/login">
+        <UnauthorizedRoute path="/login">
             <AuthPage/>
-        </PrivateRoute>
-        <PrivateRoute path="/registration" children={<RegistrationPage/>}/>
-        <Route exact render={() => <Redirect to='/'/>}/>
+        </UnauthorizedRoute>
+
+        <UnauthorizedRoute path="/registration" children={<RegistrationPage/>}/>
+        {/*<UnauthorizedRoute path="/upload" children={<UploadPage/>}/>*/}
+        <AdminRoute path="/upload" children={<UploadPage/>}/>
+        <Route render={() => <Redirect to='/'/>}/>
     </Switch>)
 
 }

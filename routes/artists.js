@@ -1,5 +1,7 @@
 import {Router} from 'express'
 import Artist from "../models/Artist";
+import passport from "passport";
+import User from "../models/User";
 
 const artistRouter = Router()
 
@@ -61,13 +63,24 @@ artistRouter.get('/:artistId', async (req, res) => {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
-artistRouter.post('/', async (req, res) => {
-    const {name} = req.body
-    const artist = new Artist({
-        name,
-    })
-    const savedArtist = await artist.save()
-    return res.status(200).json({artist: savedArtist})
+artistRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        if (!user || user.type !== "Admin") {
+            return res.status(401).json({message: "Вы не авторизованы как администратор"})
+        }
+        const {name, date} = req.body
+        const newArtist = new Artist({
+            name,
+            birthday: date,
+            image: req.file.path
+        })
+        await newArtist.save()
+        return res.status(200).json({message: "Актер добавлен"})
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
+
 
 })
 export default artistRouter

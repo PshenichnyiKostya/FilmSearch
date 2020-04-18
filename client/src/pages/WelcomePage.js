@@ -1,9 +1,11 @@
 import React from "react"
 
 const WelcomePage = () => {
+
+
     return (
         <div>
-         Welcome
+            Welcome
         </div>
     )
 }

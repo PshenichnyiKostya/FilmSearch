@@ -34,7 +34,6 @@ commentsRouter.get('/:filmId', async (req, res) => {
 })
 commentsRouter.post('/:filmId', passport.authenticate('jwt'), async (req, res) => {
     try {
-        console.log(req.user)
         if (req.body.bodyComment.length > 500) {
             return res.status(400).json({message: "Максимальная длина комментария 500 символов"})
         }

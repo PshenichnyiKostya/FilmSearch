@@ -64,3 +64,14 @@ nav {
     cursor: pointer;
     color: #999 ;
 }
+.date-height{
+    height: 400px;
+}
+
+.padding-date{
+    padding-left: 45px;
+}
+
+.padding-artist-params{
+    padding-left: 15px;
+}
