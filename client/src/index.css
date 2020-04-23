@@ -65,7 +65,7 @@ nav {
     color: #999 ;
 }
 .date-height{
-    height: 400px;
+    height: 370px;
 }
 
 .padding-date{
@@ -74,4 +74,7 @@ nav {
 
 .padding-artist-params{
     padding-left: 15px;
+}
+.padding-film-params{
+    padding-left: 60px;
 }

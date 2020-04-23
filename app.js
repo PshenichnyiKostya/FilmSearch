@@ -21,7 +21,7 @@ app.use(logger('dev'));
 
 app.use(cors());
 app.use(passport.initialize());
-app.use(multer({dest: "uploads"}).single("file"));
+app.use(multer({dest: "client/src/uploads"}).single("file"));
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');

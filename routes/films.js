@@ -1,6 +1,5 @@
 import {Router} from 'express'
 import Film from "../models/Film";
-import Artist from "../models/Artist";
 import User from "../models/User";
 import Rating from "../models/Rating";
 import passport from "passport";
@@ -51,16 +50,53 @@ filmRouter.get('/', async (req, res) => {
     }
 
 })
-filmRouter.post('/:artistId', async (req, res) => {
+
+filmRouter.get('/all', async (req, res) => {
     try {
         const films = await Film.find({})
-        const artist = await Artist.findById(req.params.artistId)
-        await artist.updateOne({$push: {films: films[1]._id}})
-        return res.status(200).json({artist: artist})
+        return res.status(200).json({films: films})
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
+
+filmRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        if (!user || user.type !== "Admin") {
+            return res.status(401).json({message: "Вы не авторизованы как администратор"})
+        }
+        const {name, artists, country, description, relatedMovies, year} = req.body
+        const newFilm = new Film({
+            name,
+            artists: artists.split(','),
+            country,
+            description,
+            relatedMovies: relatedMovies.split(','),
+            year,
+            image: req.file.path.substr(req.file.path.indexOf('u'))
+        })
+        console.log(newFilm)
+        await newFilm.save()
+        return res.status(200).json({message: "Фильм добавлен"})
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
+
+
+})
+
+// filmRouter.post('/:artistId', async (req, res) => {
+//     try {
+//         const films = await Film.find({})
+//         const artist = await Artist.findById(req.params.artistId)
+//         await artist.updateOne({$push: {films: films[1]._id}})
+//         return res.status(200).json({artist: artist})
+//     } catch (e) {
+//         return res.status(500).json({message: "Что-то пошло не так!("})
+//     }
+// })
+
 filmRouter.get('/:filmId', async (req, res) => {
     try {
         await Film.findByIdAndUpdate(req.params.filmId, {$inc: {clicks: 1}}).populate({
@@ -76,6 +112,7 @@ filmRouter.get('/:filmId', async (req, res) => {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
+
 filmRouter.post('/ratings/:filmId', passport.authenticate("jwt"), async (req, res) => {
     try {
         if (req.body.mark < 1 || req.body.mark > 10) {
@@ -107,4 +144,6 @@ filmRouter.post('/ratings/:filmId', passport.authenticate("jwt"), async (req, re
     }
 
 })
+
+
 export default filmRouter

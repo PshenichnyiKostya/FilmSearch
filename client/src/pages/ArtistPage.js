@@ -4,9 +4,6 @@ import {useHttp} from "../hooks/http.hook";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import NoItems from "../components/NoItems";
 import {Link} from "react-router-dom";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,7 +16,7 @@ const ArtistPage = ({...props}) => {
     const classes = useStyles()
     const [artist, setArtist] = useState([])
     const {request, loading, error} = useHttp()
-
+    let imgPath = '6750.jpg'
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июеь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
 
     const getMonthAndDay = (date) => {
@@ -42,7 +39,7 @@ const ArtistPage = ({...props}) => {
             setArtist(r.artist)
         })
     }, [props.match.params, request])
-
+        // `../filmImages/${imgPath}`
     return (
         <div className={classes.root}>
 
@@ -53,7 +50,10 @@ const ArtistPage = ({...props}) => {
                             <h2 className="header">{artist.name}</h2>
                             <div className="card horizontal">
                                 <div className="card-image">
-                                    <img alt={artist.name} src={require('../filmImages/6750.jpg')} width={100}
+                                    <img alt={artist.name}
+
+                                         src={require(`../filmImages/${imgPath}`)}
+                                         width={100}
                                          height={300}/>
                                 </div>
                                 <div className="card-stacked">

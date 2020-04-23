@@ -6,8 +6,6 @@ import {Carousel} from "react-responsive-carousel";
 import {AuthContext} from "../context/AuthContext";
 import CommentsList from "../components/CommentsList";
 import {useMessage} from "../hooks/message.hook";
-import BeautyStars from "beauty-stars";
-import {RadioGroup} from "@material-ui/core";
 import RatingFilm from "../components/RatingFilm";
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +49,6 @@ const FilmPage = ({...props}) => {
     }, [error, message, clearError])
 
 
-
     return (
         <div className={classes.root}>
             <div>
@@ -67,7 +64,7 @@ const FilmPage = ({...props}) => {
                                 <div className="card-content">
                                     <ul className="collection">
                                         <li className="collection-item">
-                                            <p>Cтрана: {film.country}</p>
+                                            <p>Cтрана: {film.country ? film.country : "Неизвестно"}</p>
                                         </li>
                                         <li className='collection-item'>
                                             <p>Год: {film.year ? film.year : "Неизвестно"}</p>
@@ -81,10 +78,12 @@ const FilmPage = ({...props}) => {
 
                             </div>
                         </div>
-                        {film.description &&
-                        <div className="card-panel teal blue-grey darken-1 white-text">Описание: <br/>{film.description}
+
+                        <div
+                            className="card-panel teal blue-grey darken-1 white-text">Описание: <br/>
+                            {film.description ? film.description : "Описание отсутствует"}
                         </div>
-                        }
+
 
                         {film.relatedMovies && film.relatedMovies.length > 0 ? <div className='center margin-top-15'>
                             <h4>Похожие фильмы</h4>

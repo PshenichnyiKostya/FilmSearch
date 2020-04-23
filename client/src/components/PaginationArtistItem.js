@@ -18,9 +18,12 @@ const PaginationArtistItem = ({artist}) => {
         <div className="col container">
             <h2 className="header">{artist.name}</h2>
             <div className="card horizontal">
-                <div className="card-image">
-                    <img alt={artist.name} src={require('../filmImages/6750.jpg')} width={100} height={300}/>
-                </div>
+                {artist.image ? <div className="card-image" style={{width: 200, height: 300}}>
+                    <img alt={artist.name} src={require(`../${artist.image}`)} width={200} height={300}/>
+                </div> : <div className="card-image" style={{width: 200, height: 300}}>
+                    <img alt={artist.name} src={require('../uploads/defaultArtist.png')} width={200} height={300}/>
+                </div>}
+
                 <div className="card-stacked">
                     <div className="card-content">
                         <ul className="collection">

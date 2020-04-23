@@ -10,6 +10,7 @@ import Box from '@material-ui/core/Box';
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import MovieIcon from "@material-ui/icons/Movie";
 import UploadArtistComponent from "./UploadArtistComponent";
+import UploadFilmComponent from "./UploadFilmComponent";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -83,7 +84,7 @@ export default function ArtistFilmTabPanel() {
                     <UploadArtistComponent/>
                 </TabPanel>
                 <TabPanel value={value} index={1} dir={theme.direction}>
-                    Добавить фильм
+                    <UploadFilmComponent/>
                 </TabPanel>
             </SwipeableViews>
         </div>

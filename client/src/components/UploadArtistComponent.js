@@ -90,12 +90,12 @@ const UploadArtistComponent = () => {
             <div className="file-field input-field">
                 <div className="btn">
                     <i className="material-icons">file_upload</i>
-                    <input ref={fileInputRef} type="file" id='uploadImageArtist' accept="image/*"
+                    <input ref={fileInputRef} type="file" accept="image/*"
                            onChange={handleFile}/>
                 </div>
                 <div className="file-path-wrapper">
                     <input className="file-path validate" id='fileNameArtist' type="text"
-                           placeholder="Загрузите фотографию актера"></input>
+                           placeholder="Загрузите фотографию актера"/>
                 </div>
             </div>
 
