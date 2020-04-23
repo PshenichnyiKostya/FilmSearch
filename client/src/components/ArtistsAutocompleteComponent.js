@@ -16,7 +16,7 @@ function sleep(delay = 0) {
 const icon = <CheckBoxOutlineBlankIcon fontSize="small"/>;
 const checkedIcon = <CheckBoxIcon fontSize="small"/>;
 
-const ArtistsAutocompleteComponent = ({callback}) => {
+const ArtistsAutocompleteComponent = ({callback,artists}) => {
 
     const [options, setOptions] = useState([])
     const {request, error, clearError} = useHttp()
@@ -53,6 +53,7 @@ const ArtistsAutocompleteComponent = ({callback}) => {
         <Autocomplete
             multiple
             options={options}
+            value={artists}
             onChange={(event, value) => handleArtists(value)}
             open={open}
             onOpen={() => {

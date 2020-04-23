@@ -3,6 +3,7 @@ import Film from "../models/Film";
 import User from "../models/User";
 import Rating from "../models/Rating";
 import passport from "passport";
+import Artist from "../models/Artist";
 
 const filmRouter = Router()
 
@@ -67,6 +68,7 @@ filmRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
             return res.status(401).json({message: "Вы не авторизованы как администратор"})
         }
         const {name, artists, country, description, relatedMovies, year} = req.body
+
         const newFilm = new Film({
             name,
             artists: artists.split(','),
@@ -76,8 +78,12 @@ filmRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
             year,
             image: req.file.path.substr(req.file.path.indexOf('u'))
         })
-        console.log(newFilm)
+
+        artists.split(',').map(async value => await Artist.findById(value).then(async res => {
+            await res.updateOne({$push: {films: newFilm._id}})
+        }))
         await newFilm.save()
+
         return res.status(200).json({message: "Фильм добавлен"})
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})

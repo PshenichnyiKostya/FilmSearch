@@ -53,7 +53,6 @@ artistRouter.get('/', async (req, res) => {
 artistRouter.get('/all', async (req, res) => {
     try {
         const artists = await Artist.find({})
-        console.log(artists)
         return res.status(200).json({artists: artists})
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
@@ -81,7 +80,6 @@ artistRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
         if (!user || user.type !== "Admin") {
             return res.status(401).json({message: "Вы не авторизованы как администратор"})
         }
-        console.log(req.file)
         const {name, date} = req.body
         const newArtist = new Artist({
             name,

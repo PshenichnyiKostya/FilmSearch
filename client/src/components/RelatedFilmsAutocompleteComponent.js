@@ -16,7 +16,7 @@ function sleep(delay = 0) {
 const icon = <CheckBoxOutlineBlankIcon fontSize="small"/>;
 const checkedIcon = <CheckBoxIcon fontSize="small"/>;
 
-const RelatedFilmsAutocompleteComponent = ({callback}) => {
+const RelatedFilmsAutocompleteComponent = ({callback, films}) => {
 
     const [options, setOptions] = useState([])
     const {request, error, clearError} = useHttp()
@@ -54,6 +54,7 @@ const RelatedFilmsAutocompleteComponent = ({callback}) => {
             multiple
             id="tags-outlined"
             options={options}
+            value={films}
             onChange={(event, value) => handleRelatedFilms(value)}
             open={open}
             onOpen={() => {

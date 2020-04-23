@@ -18,12 +18,13 @@ const UploadFilmComponent = () => {
     const [relatedFilms, setRelatedFilms] = useState([])
     const [artists, setArtists] = useState([])
     const [description, setDescription] = useState('')
-    const [year, setYear] = useState(null)
+    const [year, setYear] = useState('')
     const fileInputRef = useRef()
     const {token} = useContext(AuthContext)
     const message = useMessage()
 
     const uploadFilm = async () => {
+        console.log("UPLOAD")
         setLoading(true)
         try {
             if (!token) {
@@ -41,7 +42,7 @@ const UploadFilmComponent = () => {
                 formData.append('name', name)
                 formData.append('year', year)
                 formData.append('file', file)
-                formData.append('country', country)
+                formData.append('country', country ? country.label : null)
                 formData.append('relatedMovies', relatedMoviesId)
                 formData.append('artists', artistsId)
                 formData.append('description', description)
@@ -55,10 +56,11 @@ const UploadFilmComponent = () => {
                 })
 
                 message(data.data.message, "green")
-                setYear(null)
+                setYear('')
                 setDescription('')
                 setFile(null)
                 setArtists([])
+                setCountry(null)
                 setRelatedFilms([])
                 setName('')
                 document.getElementById('fileNameFilm').value = ''
@@ -71,11 +73,9 @@ const UploadFilmComponent = () => {
     }
 
     const handleCountry = (value) => {
-        console.log(value)
         setCountry(value)
     }
     const handleArtists = (value) => {
-        console.log(value)
         setArtists(value)
     }
 
@@ -98,7 +98,6 @@ const UploadFilmComponent = () => {
     }
 
     const handleRelatedFilms = (value) => {
-        console.log(value)
         setRelatedFilms(value)
     }
 
@@ -149,15 +148,15 @@ const UploadFilmComponent = () => {
             </div>
 
             <div className='padding-film-params' style={{paddingTop: "20px"}}>
-                <CountryAutocomplete callback={handleCountry}/>
+                <CountryAutocomplete callback={handleCountry} country={country}/>
             </div>
 
             <div className='padding-film-params' style={{paddingTop: "20px"}}>
-                <RelatedFilmsAutocompleteComponent callback={handleRelatedFilms}/>
+                <RelatedFilmsAutocompleteComponent callback={handleRelatedFilms} films={relatedFilms}/>
             </div>
 
             <div className='padding-film-params' style={{paddingTop: "20px"}}>
-                <ArtistsAutocompleteComponent callback={handleArtists}/>
+                <ArtistsAutocompleteComponent callback={handleArtists} artists={artists}/>
             </div>
 
             {loading && <div className='center'><CircularProgress color="secondary"/></div>}

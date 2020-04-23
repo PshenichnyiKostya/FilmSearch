@@ -10,15 +10,17 @@ function countryToFlag(isoCode) {
         : isoCode;
 }
 
-export default function CountryAutocomplete({callback}) {
+export default function CountryAutocomplete({callback,country}) {
 
     const handleCountry = (value) => {
-        callback(value ? value.label : '')
+        callback(value)
     }
+
     return (
         <Autocomplete
             id="country-select-demo"
             options={countries}
+            value={country}
             onChange={(event, value) => handleCountry(value)}
             getOptionLabel={option => option.label}
             renderOption={(option) => (
