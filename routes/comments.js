@@ -11,16 +11,16 @@ commentsRouter.get('/:filmId', async (req, res) => {
     try {
         let page = parseInt(req.query.page)
         if (page <= 0 || isNaN(page)) {
-            return res.status(404).json({message: "Комментарии не найдены"})
+            return res.status(400).json({message: "Комментарии не найдены"})
         }
         const startIndex = (page - 1) * limit
         try {
             let resultModels = await Comment.find({film: req.params.filmId}).limit(limit).skip(startIndex).sort('-timestamp').populate('user', 'clientName')
 
             if (resultModels.length === 0) {
-                return res.status(404).json({message: "Комментарии не найдены"})
+                return res.status(400).json({message: "Комментарии не найдены"})
             }
-            const size = await Comment.find().countDocuments()
+            const size = await Comment.find({film: req.params.filmId}).countDocuments()
             const pagenatedResults = resultModels
             const maxPage = Math.ceil(size / limit)
             return res.status(200).json({comments: pagenatedResults, maxPage: maxPage})
@@ -33,6 +33,7 @@ commentsRouter.get('/:filmId', async (req, res) => {
     }
 })
 commentsRouter.post('/:filmId', passport.authenticate('jwt'), async (req, res) => {
+    const limit = 2
     try {
         if (req.body.bodyComment.length > 500) {
             return res.status(400).json({message: "Максимальная длина комментария 500 символов"})
@@ -55,9 +56,16 @@ commentsRouter.post('/:filmId', passport.authenticate('jwt'), async (req, res) =
             timestamp: new Date()
         })
         await comment.save()
-        return res.status(200).json({message: "Комментрий успешно добавлен", comment: comment})
+        const size = await Comment.find({film: req.params.filmId}).countDocuments()
+        const maxPage = Math.ceil(size / limit)
+        return res.status(200).json({message: "Комментарий успешно добавлен", comment: comment, maxPage})
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
+})
+
+commentsRouter.delete('/delete',async(req,res)=>{
+    await Comment.find({}).deleteMany()
+    return res.status(200).json({message: "Ура"})
 })
 export default commentsRouter

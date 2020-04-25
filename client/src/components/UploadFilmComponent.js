@@ -24,7 +24,6 @@ const UploadFilmComponent = () => {
     const message = useMessage()
 
     const uploadFilm = async () => {
-        console.log("UPLOAD")
         setLoading(true)
         try {
             if (!token) {

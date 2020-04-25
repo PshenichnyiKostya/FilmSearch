@@ -35,7 +35,6 @@ const RatingFilm = ({filmId}) => {
                             `JWT ${token}`,
                         'Context-Type': 'Application/json'
                     })
-                    console.log(data)
                     return data
                 }
                 return null

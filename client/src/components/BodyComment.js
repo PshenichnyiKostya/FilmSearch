@@ -6,7 +6,7 @@ import {useHttp} from "../hooks/http.hook";
 const BodyComment = ({filmId, setComments}) => {
     const message = useMessage()
     const [bodyComment, setBodyComment] = useState('')
-    const {payload, token} = useContext(AuthContext)
+    const {token} = useContext(AuthContext)
     const {request, loading, error, clearError} = useHttp()
 
     const handleBodyComment = (event) => {
@@ -29,9 +29,9 @@ const BodyComment = ({filmId, setComments}) => {
                         `JWT ${token}`,
                     'Context-Type': 'Application/json'
                 })
-                setComments(data.comment)
-                setBodyComment('')
                 message(data.message, "green")
+                setBodyComment('')
+                setComments(data.comment, data.maxPage)
             }
         } catch (e) {
 

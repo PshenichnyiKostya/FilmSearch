@@ -21,19 +21,28 @@ const CommentsList = ({filmId}) => {
     const [commentPage, setCommentPage] = useState(1)
     const [maxPage, setMaxPage] = useState(1)
     const [comments, setComments] = useState([])
-    const {request, loading, error} = useHttp()
-    const {reload, setReload} = useState(false)
+    const {request, loading, error, clearError} = useHttp()
 
     const handleChange = (event, value) => {
         setCommentPage(value)
     }
 
-    const handleComments = (comment) => {
+    const handleComments = (comment, countMaxPage) => {
         const newComments = comments.slice()
-        newComments.pop()
-        newComments.unshift(comment)
+        if (comments.length > 0) {
+            if (comments.length === 2) {
+                newComments.pop()
+                newComments.unshift(comment)
+            } else if (comments.length === 1) {
+                newComments.unshift(comment)
+            }
+        } else {
+            newComments.push(comment)
+        }
+        setMaxPage(countMaxPage)
         setComments(newComments)
     }
+
     useEffect(() => {
         const func = async () => {
             try {
@@ -45,21 +54,28 @@ const CommentsList = ({filmId}) => {
         }
         func().then(r => {
             setCommentPage(commentPage)
-            setComments(r.comments)
-            setMaxPage(r.maxPage)
+            if (r.comments) {
+                setComments(r.comments)
+            }
+            if (r.maxPage) {
+                setMaxPage(r.maxPage)
+            }
+            console.log(comments)
         }).catch(() => {
 
         })
-    }, [request, commentPage, reload])
+    }, [request, commentPage])
 
     return (
         <div>
             <BodyComment filmId={filmId} setComments={handleComments}/>
             {!loading ? (<div>
-                {error ? <NoItems error={error}/> : <div>
+                {comments.length===0 ? <NoItems error={error}/> : <div>
                     <ul className="list-unstyled">
                         {comments.map((comment =>
-                                <Comment comment={comment}/>
+                                <li id={comment._id}>
+                                    <Comment comment={comment}/>
+                                </li>
                         ))}
                     </ul>
                     <div className={classes.root}>
