@@ -1,24 +1,32 @@
 @import "~materialize-css/dist/css/materialize.min.css";
+
 .margin-10 {
     margin-right: 10px;
 }
+
 /*.my-4 {*/
 /*    margin-top: 1.5rem!important;*/
 /*    margin-bottom: 1.5rem!important;*/
 /*}*/
-.list-unstyled{padding-left:0;list-style:none}
+.list-unstyled {
+    padding-left: 0;
+    list-style: none
+}
+
 .media {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: start;
     align-items: flex-start;
 }
+
 .media-body {
     -ms-flex: 1;
     flex: 1;
     margin-left: 1.5rem;
-    margin-bottom: 1.5rem!important;
+    margin-bottom: 1.5rem !important;
 }
+
 .padding-nav {
     padding: 0 2rem;
 }
@@ -40,7 +48,8 @@ nav {
 .margin-sort {
     margin-left: 5rem;
 }
-.margin-top-15{
+
+.margin-top-15 {
     margin-bottom: 1.5rem;
 }
 
@@ -52,29 +61,43 @@ nav {
 /*    resize: none;*/
 /*}*/
 
-.film-rating{
-    color: #ffb400 ;
+.film-rating {
+    color: #ffb400;
     cursor: pointer;
     display: inline-flex;
     position: relative;
     font-size: 1.5rem;
     text-align: left;
 }
-.delete-film{
+
+.delete-film-red :hover {
     cursor: pointer;
-    color: #999 ;
+    color: red;
 }
-.date-height{
+
+.delete-film-green :hover {
+    cursor: pointer;
+    color: green;
+}
+
+.date-height {
     height: 370px;
 }
 
-.padding-date{
+.padding-date {
     padding-left: 45px;
 }
 
-.padding-artist-params{
+.padding-artist-params {
     padding-left: 15px;
 }
-.padding-film-params{
+
+.padding-film-params {
     padding-left: 60px;
 }
+
+.hover-button :hover {
+    color: red;
+}
+
+

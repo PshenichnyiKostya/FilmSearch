@@ -1,7 +1,26 @@
-import React from "react"
+import React, {useContext, useState} from "react"
 import {useHistory} from "react-router-dom";
+import {AuthContext} from "../context/AuthContext";
+import {useHttp} from "../hooks/http.hook";
+import {useMessage} from "../hooks/message.hook";
+import AlertDialogComponent from "./AlertDialogComponent";
 
-const PaginationArtistItem = ({artist}) => {
+const PaginationArtistItem = ({artist, deleteArtist}) => {
+
+    const auth = useContext(AuthContext)
+    const [open, setOpen] = useState(false)
+    const {request, loading, error, clearError} = useHttp()
+    const message = useMessage()
+    const {token} = useContext(AuthContext)
+    const history = useHistory()
+
+    const handleOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
 
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июеь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
     const getMonthAndDay = (date) => {
@@ -9,11 +28,28 @@ const PaginationArtistItem = ({artist}) => {
         let day = date.getDate()
         return months[month].toString() + " " + day + ", "
     }
-    const history = useHistory()
+
     const handleToFilms = (e) => {
         e.preventDefault()
         history.push(`/artists/${artist._id}`)
     }
+
+    const handleDeleteArtist = async () => {
+        try {
+            const data = await request(`/api/artists/${artist._id}`, 'DELETE', {}, {
+                'Authorization':
+                    `JWT ${token}`,
+                'Context-Type': 'Application/json'
+            })
+            deleteArtist()
+            message(data.message, "green")
+        } catch (e) {
+
+        }
+    }
+
+    const dialogTitle = `Вы действительно хотите удалить актера ${artist.name}?`
+
     return (
         <div className="col container">
             <h2 className="header">{artist.name}</h2>
@@ -39,8 +75,26 @@ const PaginationArtistItem = ({artist}) => {
                     </div>
                     <div className="card-action">
                         <a href="#" onClick={handleToFilms}>На страницу актера</a>
+                        {auth.payload && auth.payload.type === "Admin" && <span>
+                            <a className='delete-film-green'>
+                                <i className="material-icons right">edit</i>
+                            </a>
+                            <a className='delete-film-green' onClick={handleOpen}>
+                                <i className="material-icons right">delete</i>
+                            </a>
+                            <div className='delete-film-red'>
+
+                            </div>
+                        </span>
+                        }
                     </div>
                 </div>
+                <AlertDialogComponent open={open}
+                                      toClose={handleClose}
+                                      dialogTitle={dialogTitle}
+                                      dialogDescription='Это изменение вернуть назад будет невозможно!'
+                                      confirmDialog={handleDeleteArtist}
+                />
             </div>
         </div>
     )

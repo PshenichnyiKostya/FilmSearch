@@ -31,7 +31,6 @@ const ArtistsPage = ({location}) => {
 
         const func = async () => {
             try {
-                console.log(filter)
                 const data = await request(`/api/artists?page=${page}&sort=${filter}`, 'GET')
                 return data
             } catch (e) {
@@ -56,8 +55,25 @@ const ArtistsPage = ({location}) => {
         setFilter(value)
     }
 
+    const handleAfterDelete = async () => {
+        try {
+            let data
+            if (artists.length === 1) {
+                data = await request(`/api/artists?page=${page - 1}&sort=${filter}`, 'GET')
+            } else {
+                data = await request(`/api/artists?page=${page}&sort=${filter}`, 'GET')
+            }
+            history.push(`/artists/?page=${data.curPage}`)
+            setPage(data.curPage)
+            setArtists(data.artists)
+            setMaxPage(data.maxPage)
+        } catch (e) {
+            return e.message
+        }
+    }
+
     return (
-        <div className={classes.root}>
+        <div className={classes.root.toString()}>
             <div className>
                 {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
 
@@ -67,7 +83,7 @@ const ArtistsPage = ({location}) => {
                         <ul className="collection">
                             {artists.map(artist =>
                                 <li key={artist._id}>
-                                    <PaginationArtistItem artist={artist}/>
+                                    <PaginationArtistItem artist={artist} deleteArtist={handleAfterDelete}/>
                                 </li>
                             )}
                         </ul>

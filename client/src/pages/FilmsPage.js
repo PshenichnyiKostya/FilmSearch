@@ -43,6 +43,7 @@ const FilmsPage = ({location}) => {
 
         })
     }, [location.search, request, filter])
+
     const handleChange = (event, value) => {
         history.push(`/films/?page=${value}`)
     };
@@ -50,6 +51,24 @@ const FilmsPage = ({location}) => {
     const changeFilter = (value) => {
         setFilter(value)
     }
+
+    const handleAfterDelete = async () => {
+        try {
+            let data
+            if (films.length === 1) {
+                data = await request(`/api/films?page=${page - 1}&sort=${filter}`, 'GET')
+            } else {
+                data = await request(`/api/films?page=${page}&sort=${filter}`, 'GET')
+            }
+            history.push(`/films/?page=${data.curPage}`)
+            setPage(data.curPage)
+            setFilms(data.films)
+            setMaxPage(data.maxPage)
+        } catch (e) {
+            return e.message
+        }
+    }
+
     return (
         <div className={classes.root}>
             <div>
@@ -59,7 +78,7 @@ const FilmsPage = ({location}) => {
                         <ul className="collection">
                             {films.map(film =>
                                 <li key={film._id}>
-                                    <PaginationFilmItem film={film}/>
+                                    <PaginationFilmItem film={film} deleteFilm={handleAfterDelete}/>
                                 </li>
                             )}
                         </ul>

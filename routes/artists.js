@@ -2,7 +2,7 @@ import {Router} from 'express'
 import Artist from "../models/Artist";
 import passport from "passport";
 import User from "../models/User";
-import filmRouter from "./films";
+import Film from "../models/Film";
 
 const artistRouter = Router()
 
@@ -40,7 +40,7 @@ artistRouter.get('/', async (req, res) => {
             const size = await Artist.find().countDocuments()
             const pagenatedResults = resultModels
             const maxPage = Math.ceil(size / limit)
-            return res.status(200).json({artists: pagenatedResults, maxPage: maxPage})
+            return res.status(200).json({artists: pagenatedResults, maxPage: maxPage, curPage:page})
         } catch (e) {
             res.status(500).json({message: e.message})
         }
@@ -74,6 +74,7 @@ artistRouter.get('/:artistId', async (req, res) => {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
+
 artistRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
     try {
         const user = await User.findById(req.user)
@@ -93,5 +94,24 @@ artistRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
     }
 
 
+})
+
+artistRouter.delete('/:artistId', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        if (!user || user.type !== "Admin") {
+            return res.status(401).json({message: "Вы не авторизованы как администратор"})
+        }
+        const artist = await Artist.findById(req.params.artistId)
+        if (!artist) {
+            return res.status(400).json({message: "Актер не найден"})
+        } else {
+            await Film.find({artists: {"$in": [artist]}}).updateMany({$pull: {artists: artist._id}})
+            await artist.deleteOne()
+            return res.status(200).json({message: "Актер успешно удален"})
+        }
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
 })
 export default artistRouter
