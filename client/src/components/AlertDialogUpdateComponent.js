@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function AlertDialogComponent({open, toClose, dialogDescription, dialogTitle, confirmDialog, acceptText, cancelText}) {
+export default function AlertDialogUpdateComponent({open, toClose, dialogDescription, dialogTitle, confirmDialog, thirdButton, acceptText, cancelText, noConfirmDialog}) {
 
 
     const handleClose = () => {
@@ -16,6 +16,11 @@ export default function AlertDialogComponent({open, toClose, dialogDescription, 
     const handleConfirm = () => {
         toClose()
         confirmDialog()
+    }
+
+    const handleNoConfirm = () => {
+        toClose()
+        noConfirmDialog()
     }
 
     return (
@@ -33,7 +38,11 @@ export default function AlertDialogComponent({open, toClose, dialogDescription, 
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleClose} color="secondary" className='hover-button'>
+                    {thirdButton ?
+                        <Button variant="outlined" onClick={handleClose} color="secondary" className='hover-button'>
+                            {thirdButton}
+                        </Button> : null}
+                    <Button variant="outlined" onClick={handleNoConfirm} color="secondary" className='hover-button'>
                         {cancelText}
                     </Button>
                     <Button variant="outlined" onClick={handleConfirm} color="secondary" className='hover-button'>

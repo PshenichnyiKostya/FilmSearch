@@ -100,4 +100,17 @@ nav {
     color: red;
 }
 
+.related-films-images {
+    width: 100%;
+    display: inline-block;
+    pointer-events: none
+}
 
+.carousel-height {
+    height: 400px;
+}
+
+a {
+    color: #4d4a4e;
+    font-family: "Bangla MN";
+}

@@ -21,7 +21,7 @@ const CommentsList = ({filmId}) => {
     const [commentPage, setCommentPage] = useState(1)
     const [maxPage, setMaxPage] = useState(1)
     const [comments, setComments] = useState([])
-    const {request, loading, error, clearError} = useHttp()
+    const {request, loading, error} = useHttp()
 
     const handleChange = (event, value) => {
         setCommentPage(value)
@@ -60,11 +60,10 @@ const CommentsList = ({filmId}) => {
             if (r.maxPage) {
                 setMaxPage(r.maxPage)
             }
-            console.log(comments)
         }).catch(() => {
 
         })
-    }, [request, commentPage])
+    }, [request, commentPage,comments,filmId])
 
     return (
         <div>

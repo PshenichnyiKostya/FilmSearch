@@ -74,7 +74,7 @@ const Comment = ({comment}) => {
     return (
         <div>
             <li key={comment._id} className='media'>
-                <img src={require('../filmImages/avatar.png')} className="mr-3 avatar-img" alt="..." width={80}
+                <img src={require('../uploads/avatar.png')} className="mr-3 avatar-img" alt="..." width={80}
                      height={80}/>
                 <div className="media-body">
                     <h5 className="mt-0 mb-1">{comment.user.clientName}</h5>

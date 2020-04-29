@@ -8,6 +8,7 @@ import RegistrationPage from "./pages/RegistrationPage";
 import WelcomePage from "./pages/WelcomePage";
 import ArtistPage from "./pages/ArtistPage";
 import UploadPage from "./pages/UploadPage";
+import UpdateArtistPage from "./pages/UpdateArtistPage";
 
 
 export const useRoutes = (user) => {
@@ -33,7 +34,7 @@ export const useRoutes = (user) => {
     function AdminRoute({children}) {
         return (
             <Route exact
-                   render={() => {
+                   render={(props) => {
                        if (user !== "Admin") {
                            return (<Redirect
                                to={{
@@ -49,6 +50,9 @@ export const useRoutes = (user) => {
     }
 
     return (<Switch>
+        {user !== "Admin" ? null :
+            <Route path="/update/artists/:artistId" exact component={UpdateArtistPage}/>
+        }
         <Route path="/films/:filmId" component={FilmPage}/>
         <Route path="/films" exact component={FilmsPage}/>
         <Route path="/artists" exact component={ArtistsPage}/>
@@ -61,6 +65,9 @@ export const useRoutes = (user) => {
         <UnauthorizedRoute path="/registration" children={<RegistrationPage/>}/>
         {/*<UnauthorizedRoute path="/upload" children={<UploadPage/>}/>*/}
         <AdminRoute path="/upload" children={<UploadPage/>}/>
+
+        {/*<AdminRoute path="/update/artist/:filmId" children={<UploadPage/>}/>*/}
+
         <Route render={() => <Redirect to='/'/>}/>
     </Switch>)
 

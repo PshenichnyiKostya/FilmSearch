@@ -50,10 +50,13 @@ const PaginationFilmItem = ({film, deleteFilm}) => {
                 <div className='row s1 m1'>
                     <div className="card">
                         <div className="card-image waves-effect waves-block waves-light">
-                            <img className="activator"
-                                 src={require(`../filmImages/186013_900.jpg`)}
-                                 height={400}
-                                 alt={film.name}/>
+                            {film.image ? <img className="activator"
+                                               src={require(`../${film.image}`)}
+                                               height={400}
+                                               alt={film.name}/> : <img className="activator"
+                                                                        src={require('../uploads/defaultFilm.png')}
+                                                                        height={400}
+                                                                        alt={film.name}/>}
                         </div>
                         <div className="card-content">
                     <span className="card-title activator grey-text text-darken-4">
@@ -91,6 +94,8 @@ const PaginationFilmItem = ({film, deleteFilm}) => {
                                   dialogTitle={dialogTitle}
                                   dialogDescription='Это изменение вернуть назад будет невозможно!'
                                   confirmDialog={handleDeleteFilm}
+                                  acceptText='Да'
+                                  cancelText='Нет'
             />
         </div>
     )

@@ -16,7 +16,6 @@ const ArtistPage = ({...props}) => {
     const classes = useStyles()
     const [artist, setArtist] = useState([])
     const {request, loading, error} = useHttp()
-    let imgPath = '6750.jpg'
     const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июеь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
 
     const getMonthAndDay = (date) => {
@@ -39,7 +38,7 @@ const ArtistPage = ({...props}) => {
             setArtist(r.artist)
         })
     }, [props.match.params, request])
-        // `../filmImages/${imgPath}`
+
     return (
         <div className={classes.root}>
 
@@ -50,11 +49,15 @@ const ArtistPage = ({...props}) => {
                             <h2 className="header">{artist.name}</h2>
                             <div className="card horizontal">
                                 <div className="card-image">
-                                    <img alt={artist.name}
+                                    {artist.image ? <img alt={artist.name}
 
-                                         src={require(`../filmImages/${imgPath}`)}
-                                         width={100}
-                                         height={300}/>
+                                                         src={require(`../${artist.image}`)}
+                                                         width={100}
+                                                         height={300}/> : <img alt={artist.name}
+
+                                                                               src={require('../uploads/defaultArtist.png')}
+                                                                               width={100}
+                                                                               height={300}/>}
                                 </div>
                                 <div className="card-stacked">
                                     <div className="card-content">

@@ -7,7 +7,7 @@ const BodyComment = ({filmId, setComments}) => {
     const message = useMessage()
     const [bodyComment, setBodyComment] = useState('')
     const {token} = useContext(AuthContext)
-    const {request, loading, error, clearError} = useHttp()
+    const {request, loading} = useHttp()
 
     const handleBodyComment = (event) => {
         if (event.target.value.length <= 500) {

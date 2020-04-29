@@ -9,6 +9,7 @@ const Film = new Schema({
     relatedMovies: [{type: Schema.Types.ObjectId, ref: 'Film', default: []}],
     year: {type: Number, default: null},
     clicks: {type: Number, default: 0},
+    image: {type: String}
 })
 
 

@@ -6,7 +6,7 @@ import {useMessage} from "../hooks/message.hook";
 
 const RatingFilm = ({filmId}) => {
     const [rating, setRating] = useState(0)
-    const {request, loading, error, clearError} = useHttp()
+    const {request} = useHttp()
     const {token} = useContext(AuthContext)
     const message = useMessage()
 
@@ -15,7 +15,7 @@ const RatingFilm = ({filmId}) => {
             if (!token) {
                 message("Вы не авторизованы", "red")
             } else {
-                const data = await request(`/api/ratings/${filmId}`, 'DELETE', {}, {
+                await request(`/api/ratings/${filmId}`, 'DELETE', {}, {
                     'Authorization':
                         `JWT ${token}`,
                     'Context-Type': 'Application/json'
@@ -49,7 +49,7 @@ const RatingFilm = ({filmId}) => {
         }).catch(() => {
 
         })
-    }, [request])
+    }, [request,filmId,token])
     const handleRating = async (value) => {
         try {
             if (!token) {
@@ -77,7 +77,7 @@ const RatingFilm = ({filmId}) => {
                 maxStars={10}
             />
             <br/>
-            {rating > 0 ? <a className='delete-film' onClick={handleDeleteRating}>
+            {rating > 0 ? <a className='delete-film-red' onClick={handleDeleteRating}>
                 <h10>Удалить оценку</h10>
             </a> : null}
         </div>

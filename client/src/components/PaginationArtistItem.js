@@ -9,7 +9,7 @@ const PaginationArtistItem = ({artist, deleteArtist}) => {
 
     const auth = useContext(AuthContext)
     const [open, setOpen] = useState(false)
-    const {request, loading, error, clearError} = useHttp()
+    const {request} = useHttp()
     const message = useMessage()
     const {token} = useContext(AuthContext)
     const history = useHistory()
@@ -48,6 +48,11 @@ const PaginationArtistItem = ({artist, deleteArtist}) => {
         }
     }
 
+    const handleUpdateArtist = () => {
+        history.push(`/update/artists/${artist._id}`)
+    }
+
+
     const dialogTitle = `Вы действительно хотите удалить актера ${artist.name}?`
 
     return (
@@ -76,15 +81,12 @@ const PaginationArtistItem = ({artist, deleteArtist}) => {
                     <div className="card-action">
                         <a href="#" onClick={handleToFilms}>На страницу актера</a>
                         {auth.payload && auth.payload.type === "Admin" && <span>
-                            <a className='delete-film-green'>
+                            <a className='delete-film-green' onClick={handleUpdateArtist}>
                                 <i className="material-icons right">edit</i>
                             </a>
                             <a className='delete-film-green' onClick={handleOpen}>
                                 <i className="material-icons right">delete</i>
                             </a>
-                            <div className='delete-film-red'>
-
-                            </div>
                         </span>
                         }
                     </div>
@@ -94,6 +96,8 @@ const PaginationArtistItem = ({artist, deleteArtist}) => {
                                       dialogTitle={dialogTitle}
                                       dialogDescription='Это изменение вернуть назад будет невозможно!'
                                       confirmDialog={handleDeleteArtist}
+                                      acceptText='Да'
+                                      cancelText='Нет'
                 />
             </div>
         </div>

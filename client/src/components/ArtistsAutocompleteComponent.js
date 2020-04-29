@@ -7,11 +7,11 @@ import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
-function sleep(delay = 0) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, delay);
-    });
-}
+// function sleep(delay = 0) {
+//     return new Promise((resolve) => {
+//         setTimeout(resolve, delay);
+//     });
+// }
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small"/>;
 const checkedIcon = <CheckBoxIcon fontSize="small"/>;
@@ -19,13 +19,11 @@ const checkedIcon = <CheckBoxIcon fontSize="small"/>;
 const ArtistsAutocompleteComponent = ({callback,artists}) => {
 
     const [options, setOptions] = useState([])
-    const {request, error, clearError} = useHttp()
+    const {request} = useHttp()
     const [open, setOpen] = useState(false);
     const loading = open && options.length === 0;
 
     React.useEffect(() => {
-        let active = true;
-
         if (!loading) {
             return undefined;
         }
@@ -36,13 +34,10 @@ const ArtistsAutocompleteComponent = ({callback,artists}) => {
                 // await sleep(1e3); // For demo purposes.
                 setOptions(data.artists)
             } catch (e) {
-                active = false
+
             }
         })();
 
-        return () => {
-            active = false;
-        };
     }, [loading, request]);
 
     const handleArtists = (value) => {

@@ -3,6 +3,7 @@ import Artist from "../models/Artist";
 import passport from "passport";
 import User from "../models/User";
 import Film from "../models/Film";
+import fs from "fs";
 
 const artistRouter = Router()
 
@@ -40,7 +41,7 @@ artistRouter.get('/', async (req, res) => {
             const size = await Artist.find().countDocuments()
             const pagenatedResults = resultModels
             const maxPage = Math.ceil(size / limit)
-            return res.status(200).json({artists: pagenatedResults, maxPage: maxPage, curPage:page})
+            return res.status(200).json({artists: pagenatedResults, maxPage: maxPage, curPage: page})
         } catch (e) {
             res.status(500).json({message: e.message})
         }
@@ -106,6 +107,11 @@ artistRouter.delete('/:artistId', passport.authenticate('jwt'), async (req, res)
         if (!artist) {
             return res.status(400).json({message: "Актер не найден"})
         } else {
+            try {
+                fs.unlinkSync(`client/src/${artist.image}`)
+            } catch (e) {
+                return res.status(500).json({message: "Что-то пошло не так!("})
+            }
             await Film.find({artists: {"$in": [artist]}}).updateMany({$pull: {artists: artist._id}})
             await artist.deleteOne()
             return res.status(200).json({message: "Актер успешно удален"})
@@ -114,4 +120,44 @@ artistRouter.delete('/:artistId', passport.authenticate('jwt'), async (req, res)
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
+
+artistRouter.put('/:artistId', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        if (!user || user.type !== "Admin") {
+            return res.status(401).json({message: "Вы не авторизованы как администратор"})
+        }
+        const artist = await Artist.findById(req.params.artistId)
+        if (!artist) {
+            return res.status(400).json({message: "Актер не найден"})
+        } else {
+            const {isUpdateFile, name, birthday} = req.body
+            const file = req.file
+            if (!name || !birthday) {
+                return res.status(400).json({message: "Указаны не все данные"})
+            }
+
+            if (isUpdateFile === 'true') {
+                if (artist.image) {
+                    try {
+                        fs.unlinkSync(`client/src/${artist.image}`)
+                    } catch (e) {
+                        return res.status(500).json({message: "Что-то пошло не так!("})
+                    }
+                }
+                if (file) {
+                    await artist.updateOne({name, birthday, image: file.path.substr(req.file.path.indexOf('u'))})
+                } else {
+                    await artist.updateOne({name, birthday, image: file})
+                }
+            } else {
+                await artist.updateOne({name, birthday})
+            }
+            return res.status(200).json({message: 'Актер успешно изменен'})
+        }
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
+})
+
 export default artistRouter

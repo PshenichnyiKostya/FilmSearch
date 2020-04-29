@@ -5,6 +5,7 @@ import Rating from "../models/Rating";
 import passport from "passport";
 import Artist from "../models/Artist";
 import Comment from "../models/Comment";
+import fs from 'fs'
 
 const filmRouter = Router()
 
@@ -21,19 +22,19 @@ filmRouter.get('/', async (req, res) => {
             let resultModels
             switch (filterParam) {
                 case 'name':
-                    resultModels = await Film.find().sort({name: 1}).limit(limit).skip(startIndex).populate('relatedMovies', 'name')
+                    resultModels = await Film.find().sort({name: 1}).limit(limit).skip(startIndex).populate('relatedMovies', 'name image')
                     break
                 case 'rating':
-                    resultModels = await Film.find().sort('-rating').limit(limit).skip(startIndex).populate('relatedMovies', 'name')
+                    resultModels = await Film.find().sort('-rating').limit(limit).skip(startIndex).populate('relatedMovies', 'name image')
                     break
                 case 'date':
-                    resultModels = await Film.find().sort('-year').limit(limit).skip(startIndex).populate('relatedMovies', 'name')
+                    resultModels = await Film.find().sort('-year').limit(limit).skip(startIndex).populate('relatedMovies', 'name image')
                     break
                 case 'clicks':
-                    resultModels = await Film.find().sort('-clicks').limit(limit).skip(startIndex).populate('relatedMovies', 'name')
+                    resultModels = await Film.find().sort('-clicks').limit(limit).skip(startIndex).populate('relatedMovies', 'name image')
                     break
                 default:
-                    resultModels = await Film.find().limit(limit).skip(startIndex).populate('relatedMovies', 'name')
+                    resultModels = await Film.find().limit(limit).skip(startIndex).populate('relatedMovies', 'name image')
             }
 
             if (resultModels.length === 0) {
@@ -108,8 +109,8 @@ filmRouter.get('/:filmId', async (req, res) => {
     try {
         await Film.findByIdAndUpdate(req.params.filmId, {$inc: {clicks: 1}}).populate({
             path: 'relatedMovies',
-            select: 'name'
-        }).then(film => {
+            select: 'name image'
+        }).populate({path: 'artists', select: 'name'}).then(film => {
             if (!film) {
                 return res.status(404).json({message: "Фильм не найден"})
             }
@@ -162,6 +163,11 @@ filmRouter.delete('/:filmId', passport.authenticate('jwt'), async (req, res) => 
         if (!film) {
             return res.status(400).json({message: "Фильм не найден"})
         } else {
+            try {
+                fs.unlinkSync(`client/src/${film.image}`)
+            } catch (e) {
+                return res.status(500).json({message: "Что-то пошло не так!("})
+            }
             await Comment.find({film: film}).deleteMany()
             await Artist.find({films: {"$in": [film]}}).updateMany({$pull: {films: film._id}})
             await Rating.find({film: film}).deleteMany()
@@ -171,5 +177,9 @@ filmRouter.delete('/:filmId', passport.authenticate('jwt'), async (req, res) => 
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
+})
+filmRouter.get('/qwe/qwe', async (req, res) => {
+
+    return res.send({message: "yra"})
 })
 export default filmRouter

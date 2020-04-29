@@ -160,7 +160,7 @@ const UploadFilmComponent = () => {
 
             {loading && <div className='center'><CircularProgress color="secondary"/></div>}
             <div className='center' style={{"padding-top": '60px'}}>
-                <a className="waves-effect waves-light btn-large" onClick={uploadFilm}><i
+                <a className="waves-effect waves-light btn-large" href='#' onClick={uploadFilm}><i
                     className="material-icons left">send</i>Сохранить</a>
             </div>
         </div>

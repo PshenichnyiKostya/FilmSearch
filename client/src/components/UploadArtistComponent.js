@@ -80,7 +80,7 @@ const UploadArtistComponent = () => {
                         selected={date}
                         onChange={handleChangeDate}
                         dateFormat="yyyy/MM/dd"
-                        placeholderText="Выберите дату"
+                        placeholderText="Дата рождения"
                         shouldCloseOnSelect={false}
                     />
                 </div>
@@ -101,7 +101,7 @@ const UploadArtistComponent = () => {
 
             {loading && <div className='center'><CircularProgress color="secondary"/></div>}
             <div className='center' style={{"padding-top": '50px'}}>
-                <a className="waves-effect waves-light btn-large" onClick={uploadArtist}><i
+                <a href='#' className="waves-effect waves-light btn-large" onClick={uploadArtist}><i
                     className="material-icons left">send</i>Сохранить</a>
             </div>
         </div>
