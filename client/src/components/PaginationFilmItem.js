@@ -4,6 +4,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import AlertDialogComponent from "./AlertDialogComponent";
 import {AuthContext} from "../context/AuthContext";
 import {useHttp} from "../hooks/http.hook";
+import {useHistory} from "react-router-dom";
 import {useMessage} from "../hooks/message.hook";
 import {CircularProgress} from "@material-ui/core";
 
@@ -14,6 +15,7 @@ const PaginationFilmItem = ({film, deleteFilm}) => {
     const {token} = useContext(AuthContext)
     const {request, loading, error, clearError} = useHttp()
     const message = useMessage()
+    const history = useHistory()
 
     const handleOpen = () => {
         setOpen(true)
@@ -40,6 +42,10 @@ const PaginationFilmItem = ({film, deleteFilm}) => {
         } catch (e) {
 
         }
+    }
+
+    const handleUpdateFilm = () => {
+        history.push(`/update/films/${film._id}`)
     }
 
     const dialogTitle = `Вы действительно хотите удалить фильм "${film.name}"?`
@@ -72,7 +78,7 @@ const PaginationFilmItem = ({film, deleteFilm}) => {
                                         <i className="material-icons right">delete</i>
                                     </a>
                                 </div>
-                                <div className='delete-film-green'>
+                                <div className='delete-film-green' onClick={handleUpdateFilm}>
                                     <a>
                                         <i className="material-icons right">edit</i>
                                     </a>

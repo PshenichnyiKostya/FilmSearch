@@ -57,6 +57,7 @@ filmRouter.get('/', async (req, res) => {
 filmRouter.get('/all', async (req, res) => {
     try {
         const films = await Film.find({})
+        console.log(films)
         return res.status(200).json({films: films})
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
@@ -73,10 +74,10 @@ filmRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
 
         const newFilm = new Film({
             name,
-            artists: artists.split(','),
+            artists: artists ? artists.split(',') : [],
             country,
             description,
-            relatedMovies: relatedMovies.split(','),
+            relatedMovies: relatedMovies ? relatedMovies.split(',') : [],
             year,
             image: req.file.path.substr(req.file.path.indexOf('u'))
         })
@@ -94,23 +95,9 @@ filmRouter.post('/', passport.authenticate('jwt'), async (req, res) => {
 
 })
 
-// filmRouter.post('/:artistId', async (req, res) => {
-//     try {
-//         const films = await Film.find({})
-//         const artist = await Artist.findById(req.params.artistId)
-//         await artist.updateOne({$push: {films: films[1]._id}})
-//         return res.status(200).json({artist: artist})
-//     } catch (e) {
-//         return res.status(500).json({message: "Что-то пошло не так!("})
-//     }
-// })
-
 filmRouter.get('/:filmId', async (req, res) => {
     try {
-        await Film.findByIdAndUpdate(req.params.filmId, {$inc: {clicks: 1}}).populate({
-            path: 'relatedMovies',
-            select: 'name image'
-        }).populate({path: 'artists', select: 'name'}).then(film => {
+        await Film.findByIdAndUpdate(req.params.filmId, {$inc: {clicks: 1}}).populate('relatedMovies').populate('artists').then(film => {
             if (!film) {
                 return res.status(404).json({message: "Фильм не найден"})
             }
@@ -178,8 +165,80 @@ filmRouter.delete('/:filmId', passport.authenticate('jwt'), async (req, res) => 
         return res.status(500).json({message: "Что-то пошло не так!("})
     }
 })
-filmRouter.get('/qwe/qwe', async (req, res) => {
 
-    return res.send({message: "yra"})
+filmRouter.put('/:filmId', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        if (!user || user.type !== "Admin") {
+            return res.status(401).json({message: "Вы не авторизованы как администратор"})
+        }
+        const film = await Film.findById(req.params.filmId)
+        if (!film) {
+            return res.status(400).json({message: "Фильм не найден"})
+        } else {
+            const {isUpdateFile, name, country, description, relatedMovies, year, artists} = req.body
+            const file = req.file
+            if (!name || !year) {
+                return res.status(400).json({message: "Указаны не все данные"})
+            }
+
+            let relatedMoviesArray
+            if (relatedMovies) {
+                relatedMoviesArray = relatedMovies.split(',')
+            } else {
+                relatedMoviesArray = null
+            }
+
+            relatedMoviesArray ? relatedMoviesArray.forEach(value => {
+                if (value === req.params.filmId) {
+                    return res.status(400).json({message: "Фильм не может быть похож сам на себя"})
+                }
+            }) : undefined
+
+            if (isUpdateFile === 'true') {
+                if (film.image) {
+                    try {
+                        fs.unlinkSync(`client/src/${film.image}`)
+                    } catch (e) {
+                        return res.status(500).json({message: "Что-то пошло не так!("})
+                    }
+                }
+                if (file) {
+                    await film.updateOne({
+                        name,
+                        year,
+                        image: file.path.substr(req.file.path.indexOf('u')),
+                        relatedMovies: relatedMoviesArray ? relatedMoviesArray : [],
+                        artists: artists ? artists.split(',') : [],
+                        description,
+                        country
+                    })
+                } else {
+                    await film.updateOne({
+                        name,
+                        year,
+                        image: file,
+                        relatedMovies: relatedMoviesArray ? relatedMoviesArray : [],
+                        artists: artists ? artists.split(',') : [],
+                        description,
+                        country
+                    })
+                }
+            } else {
+                await film.updateOne({
+                    name,
+                    year,
+                    relatedMovies: relatedMoviesArray ? relatedMoviesArray : [],
+                    artists: artists ? artists.split(',') : [],
+                    description,
+                    country
+                })
+            }
+            return res.status(200).json({message: 'Фильм успешно изменен'})
+        }
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
 })
+
 export default filmRouter

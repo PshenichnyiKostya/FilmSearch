@@ -74,6 +74,7 @@ const UploadFilmComponent = () => {
     const handleCountry = (value) => {
         setCountry(value)
     }
+
     const handleArtists = (value) => {
         setArtists(value)
     }
@@ -163,6 +164,7 @@ const UploadFilmComponent = () => {
                 <a className="waves-effect waves-light btn-large" href='#' onClick={uploadFilm}><i
                     className="material-icons left">send</i>Сохранить</a>
             </div>
+
         </div>
     )
 }

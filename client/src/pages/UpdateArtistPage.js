@@ -87,7 +87,6 @@ const UpdateArtistPage = ({...props}) => {
                 formData.append('birthday', date)
                 formData.append('file', file)
                 formData.append('isUpdateFile', true)
-                console.log('удаляем')
                 const data = await axios.put(`/api/artists/${props.match.params.artistId}`, formData, {
                     headers: {
                         'Authorization': `JWT ${token}`
@@ -119,7 +118,6 @@ const UpdateArtistPage = ({...props}) => {
                 formData.append('birthday', date)
                 formData.append('file', file)
                 formData.append('isUpdateFile', false)
-                console.log('не удаляем')
                 const data = await axios.put(`/api/artists/${props.match.params.artistId}`, formData, {
                     headers: {
                         'Authorization': `JWT ${token}`
@@ -139,49 +137,53 @@ const UpdateArtistPage = ({...props}) => {
 
     return (
         <div>
-            <div className='date-height'>
-                <div className="input-field col s6 padding-artist-params">
-                    <i className="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" placeholder='Имя' type="text" className="validate"
-                           onChange={handleName}
-                           value={name}>
-                    </input>
-                </div>
-
-                <div className="input-field col s6 padding-artist-params">
-                    <i className="material-icons prefix margin-icon-date">date_range</i>
-                    <div className='padding-date'>
-                        <DatePicker
-                            showPopperArrow={false}
-                            selected={date}
-                            onChange={handleChangeDate}
-                            dateFormat="yyyy/MM/dd"
-                            placeholderText="Дата рождения"
-                            shouldCloseOnSelect={false}
-                        />
+            {!name || !date ? <div className='center'><CircularProgress сolor="secondary"/></div> :
+                <div className='date-height'>
+                    <div className="center">
+                        <p className="flow-text"> Редактирование</p>
                     </div>
-                </div>
-
-
-                <div className="file-field input-field">
-                    <div className="btn">
-                        <i className="material-icons">file_upload</i>
-                        <input ref={fileInputRef} type="file" accept="image/*"
-                               onChange={handleFile}/>
+                    <div className="input-field col s6 padding-artist-params">
+                        <i className="material-icons prefix">account_circle</i>
+                        <input id="icon_prefix" placeholder='Имя' type="text" className="validate"
+                               onChange={handleName}
+                               value={name}>
+                        </input>
                     </div>
-                    <div className="file-path-wrapper">
-                        <input className="file-path validate" id='fileNameArtist' type="text"
-                               placeholder="Загрузите фотографию актера"/>
+
+                    <div className="input-field col s6 padding-artist-params">
+                        <i className="material-icons prefix margin-icon-date">date_range</i>
+                        <div className='padding-date'>
+                            <DatePicker
+                                showPopperArrow={false}
+                                selected={date}
+                                onChange={handleChangeDate}
+                                dateFormat="yyyy/MM/dd"
+                                placeholderText="Дата рождения"
+                                shouldCloseOnSelect={false}
+                            />
+                        </div>
                     </div>
-                </div>
 
-                {loading && <div className='center'><CircularProgress color="secondary"/></div>}
-                <div className='center' style={{"padding-top": '50px'}}>
-                    <a className="waves-effect waves-light btn-large" onClick={updateArtistDialog}><i
-                        className="material-icons left">send</i>Сохранить</a>
-                </div>
 
-            </div>
+                    <div className="file-field input-field">
+                        <div className="btn">
+                            <i className="material-icons">file_upload</i>
+                            <input ref={fileInputRef} type="file" accept="image/*"
+                                   onChange={handleFile}/>
+                        </div>
+                        <div className="file-path-wrapper">
+                            <input className="file-path validate" id='fileNameArtist' type="text"
+                                   placeholder="Загрузите фотографию актера"/>
+                        </div>
+                    </div>
+
+                    {loading && <div className='center'><CircularProgress color="secondary"/></div>}
+                    <div className='center' style={{"padding-top": '50px'}}>
+                        <a className="waves-effect waves-light btn-large" onClick={updateArtistDialog}><i
+                            className="material-icons left">send</i>Сохранить</a>
+                    </div>
+
+                </div>}
             <AlertDialogUpdateComponent open={open}
                                         toClose={handleClose}
                                         dialogTitle={dialogTitle}

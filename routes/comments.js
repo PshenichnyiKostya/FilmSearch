@@ -23,7 +23,7 @@ commentsRouter.get('/:filmId', async (req, res) => {
             const size = await Comment.find({film: req.params.filmId}).countDocuments()
             const pagenatedResults = resultModels
             const maxPage = Math.ceil(size / limit)
-            return res.status(200).json({comments: pagenatedResults, maxPage: maxPage})
+            return res.status(200).json({comments: pagenatedResults, maxPage: maxPage, curPage: page})
         } catch (e) {
             res.status(500).json({message: e.message})
         }
@@ -64,8 +64,27 @@ commentsRouter.post('/:filmId', passport.authenticate('jwt'), async (req, res) =
     }
 })
 
-commentsRouter.delete('/delete',async(req,res)=>{
-    await Comment.find({}).deleteMany()
-    return res.status(200).json({message: "Ура"})
+// commentsRouter.delete('/delete',async(req,res)=>{
+//     await Comment.find({}).deleteMany()
+//     return res.status(200).json({message: "Ура"})
+// })
+
+commentsRouter.delete('/:commentId', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        if (!user || user.type !== "Admin") {
+            return res.status(401).json({message: "Вы не авторизованы как администратор"})
+        }
+        const comment = await Comment.findById(req.params.commentId)
+        if (!comment) {
+            return res.status(400).json({message: "Комментарий не найден"})
+        } else {
+            await comment.deleteOne()
+            return res.status(200).json({message: "Комментарий успешно удален"})
+        }
+    } catch (e) {
+        return res.status(500).json({message: "Что-то пошло не так!("})
+    }
 })
+
 export default commentsRouter

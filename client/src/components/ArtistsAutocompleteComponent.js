@@ -30,7 +30,7 @@ const ArtistsAutocompleteComponent = ({callback,artists}) => {
 
         (async () => {
             try {
-                const data = await request('api/artists/all', 'GET')
+                const data = await request('/api/artists/all', 'GET')
                 // await sleep(1e3); // For demo purposes.
                 setOptions(data.artists)
             } catch (e) {
@@ -54,6 +54,7 @@ const ArtistsAutocompleteComponent = ({callback,artists}) => {
             onOpen={() => {
                 setOpen(true);
             }}
+            getOptionSelected={(option, value) => option._id === value._id}
             disableCloseOnSelect
             noOptionsText='Нет актеров'
             loading={loading}

@@ -1,12 +1,35 @@
-import React from "react"
+import React, {useContext, useEffect, useState} from "react"
+import {TextField} from "@material-ui/core";
+import AlertDialogComponent from "./AlertDialogComponent";
+import {AuthContext} from "../context/AuthContext";
+import {useMessage} from "../hooks/message.hook";
+import {useHttp} from "../hooks/http.hook";
 
-const Comment = ({comment}) => {
+const Comment = ({comment,deleteComment}) => {
+
+    const [open, setOpen] = useState(false)
+    const {token} = useContext(AuthContext)
+    const message = useMessage()
+    const {request, loading, error, clearError} = useHttp()
 
     const MONTH_NAMES = [
         'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня',
         'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'
     ];
 
+    useEffect(() => {
+        message(error, "red")
+        clearError()
+    }, [error, message, clearError])
+
+    const inputProps = {
+        background: "white",
+        color: "black"
+    };
+
+
+    const dialogTitle = `Вы действительно хотите удалить комментарий "${comment.body.length > 50 ? comment.body.substr(0, 50) +
+        '..' : comment.body}"?`
 
     function getFormattedDate(date, prefomattedDate = false, hideYear = false) {
         const day = date.getDate();
@@ -14,7 +37,6 @@ const Comment = ({comment}) => {
         const year = date.getFullYear();
         const hours = date.getHours();
         let minutes = date.getMinutes();
-
         if (minutes < 10) {
             minutes = `0${minutes}`;
         }
@@ -71,6 +93,28 @@ const Comment = ({comment}) => {
         return getFormattedDate(date);
     }
 
+    const handleOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleDeleteComment = async () => {
+        try {
+            const data = await request(`/api/comments/${comment._id}`, 'DELETE', {}, {
+                'Authorization':
+                    `JWT ${token}`,
+                'Context-Type': 'Application/json'
+            })
+            deleteComment()
+            message(data.message, "green")
+        } catch (e) {
+
+        }
+    }
+
     return (
         <div>
             <li key={comment._id} className='media'>
@@ -78,14 +122,41 @@ const Comment = ({comment}) => {
                      height={80}/>
                 <div className="media-body">
                     <h5 className="mt-0 mb-1">{comment.user.clientName}</h5>
+                    <div className='delete-film-red'>
+                        <a onClick={handleOpen}>
+                            <i className="material-icons right">delete</i>
+                        </a>
+                    </div>
                     <p>
                         <h10>{timeAgo(comment.timestamp)}</h10>
                     </p>
-                    <p className='left-align margin-10'>
-                        {comment.body}
+
+                    <p>
+                        <TextField
+                            multiline
+                            value={comment.body}
+                            fullWidth
+                            inputProps={inputProps}
+                            color="primary"
+                            InputProps={{
+                                style: {
+                                    color: "black"
+                                }
+                            }}
+                            variant="outlined"
+                            disabled
+                        />
                     </p>
                 </div>
             </li>
+            <AlertDialogComponent open={open}
+                                  toClose={handleClose}
+                                  dialogTitle={dialogTitle}
+                                  dialogDescription='Это изменение вернуть назад будет невозможно!'
+                                  confirmDialog={handleDeleteComment}
+                                  acceptText='Да'
+                                  cancelText='Нет'
+            />
         </div>
     )
 }

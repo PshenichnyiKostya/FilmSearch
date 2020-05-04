@@ -6,7 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useHttp} from "../hooks/http.hook";
 import NoItems from "./NoItems";
 import BodyComment from "./BodyComment";
-
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -22,6 +22,7 @@ const CommentsList = ({filmId}) => {
     const [maxPage, setMaxPage] = useState(1)
     const [comments, setComments] = useState([])
     const {request, loading, error} = useHttp()
+    const history = useHistory()
 
     const handleChange = (event, value) => {
         setCommentPage(value)
@@ -41,6 +42,24 @@ const CommentsList = ({filmId}) => {
         }
         setMaxPage(countMaxPage)
         setComments(newComments)
+    }
+
+    const handleAfterDelete = async () => {
+        try {
+            console.log("qweqwe")
+            let data
+            if (comments.length === 1) {
+                data = await request(`/api/comments/${filmId}?page=${commentPage-1}`, 'GET')
+            } else {
+                data = await request(`/api/comments/${filmId}?page=${commentPage}`, 'GET')
+            }
+            history.push(`/films/${filmId}`)
+            setCommentPage(data.curPage)
+            setComments(data.comments)
+            setMaxPage(data.maxPage)
+        } catch (e) {
+            return e.message
+        }
     }
 
     useEffect(() => {
@@ -63,17 +82,17 @@ const CommentsList = ({filmId}) => {
         }).catch(() => {
 
         })
-    }, [request, commentPage,comments,filmId])
+    }, [request, commentPage, filmId])
 
     return (
         <div>
             <BodyComment filmId={filmId} setComments={handleComments}/>
             {!loading ? (<div>
-                {comments.length===0 ? <NoItems error={error}/> : <div>
+                {comments.length === 0 ? <NoItems error={error}/> : <div>
                     <ul className="list-unstyled">
                         {comments.map((comment =>
                                 <li id={comment._id}>
-                                    <Comment comment={comment}/>
+                                    <Comment comment={comment} deleteComment={handleAfterDelete}/>
                                 </li>
                         ))}
                     </ul>

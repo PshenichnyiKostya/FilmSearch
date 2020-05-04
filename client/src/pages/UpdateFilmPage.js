@@ -1,51 +1,271 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {CircularProgress} from "@material-ui/core";
+import {AuthContext} from "../context/AuthContext";
+import {useMessage} from "../hooks/message.hook";
+import {useHttp} from "../hooks/http.hook";
+import {useHistory} from "react-router-dom";
+import CountryAutocomplete from "../components/CountryAutocomplete";
+import RelatedFilmsAutocompleteComponent from "../components/RelatedFilmsAutocompleteComponent";
+import ArtistsAutocompleteComponent from "../components/ArtistsAutocompleteComponent";
+import AlertDialogComponent from "../components/AlertDialogComponent";
+import AlertDialogUpdateComponent from "../components/AlertDialogUpdateComponent";
+import axios from "axios";
 
-function countryToFlag(isoCode) {
-    return typeof String.fromCodePoint !== 'undefined'
-        ? isoCode
-            .toUpperCase()
-            .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-        : isoCode;
-}
+const UpdateFilmPage = ({...props}) => {
 
-export default function CountryAutocomplete({callback,country}) {
+    const [year, setYear] = useState(null)
+    const [file, setFile] = useState(null)
+    const [description, setDescription] = useState('')
+    const [relatedFilms, setRelatedFilms] = useState([])
+    const [artists, setArtists] = useState([])
+    const [country, setCountry] = useState(null)
+    const [open, setOpen] = useState(false)
+    const [open2, setOpen2] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [name, setName] = useState('')
+    const [dialogTitle, setDialogTitle] = useState('')
+    const {request} = useHttp()
+    const fileInputRef = useRef()
+    const {token} = useContext(AuthContext)
+    const message = useMessage()
+    const history = useHistory()
 
-    const handleCountry = (value) => {
-        console.log(value)
-        callback(value)
+    const handleYear = (event) => {
+        setYear(event.target.value)
     }
 
+    const handleName = (event) => {
+        setName(event.target.value)
+    }
+    const handleFile = (event) => {
+        setFile(event.target.files[0])
+    }
+
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleCountry = (value) => {
+        setCountry(value)
+    }
+
+    const handleDescription = (event) => {
+        if (event.target.value.length <= 700) {
+            setDescription(event.target.value)
+        }
+    }
+
+    const handleClose2 = () => {
+        setOpen2(false)
+    }
+
+    const handleRelatedFilms = (value) => {
+        setRelatedFilms(value)
+    }
+
+    const handleArtists = (value) => {
+        setArtists(value)
+    }
+
+    useEffect(() => {
+        const func = async () => {
+            const {filmId} = props.match.params
+            try {
+                const data = await request(`/api/films/${filmId}`, 'GET')
+                return data
+            } catch (e) {
+                return e.message
+            }
+        }
+        func().then(r => {
+            setName(r.film.name)
+            setYear(r.film.year)
+            setDescription(r.film.description)
+            for (let i = 0; i < countries.length; i++) {
+                if (countries[i].label === r.film.country) {
+                    setCountry(countries[i])
+                }
+            }
+            setRelatedFilms(r.film.relatedMovies)
+            setArtists(r.film.artists)
+        })
+    }, [props.match.params, request, token])
+
+    const updateArtistDialog = () => {
+        if (file) {
+            setDialogTitle(`Вы действительно хотите сохранить данные изменения?`)
+            setOpen2(true)
+        } else {
+            setDialogTitle(`Вы не выбрали файл. Нажмите "удалить", если хотите удалить постер фильма и сохранить изменения. Нажмите "оставить", если хотите сохранить изменения и оставить старый постер фильма`)
+            setOpen(true)
+        }
+
+    }
+
+    const handleUpdateArtist = async () => {
+        setLoading(true)
+        try {
+            if (!token) {
+                message("Вы не авторизованы", "red")
+                setLoading(false)
+            } else {
+                let formData = new FormData()
+                let relatedMoviesId = []
+                relatedFilms.map(value => relatedMoviesId.push(value._id))
+                let artistsId = []
+                artists.map(value => artistsId.push(value._id))
+                formData.append('name', name)
+                formData.append('year', year)
+                formData.append('file', file)
+                formData.append('country', country ? country.label : null)
+                formData.append('relatedMovies', relatedMoviesId)
+                formData.append('artists', artistsId)
+                formData.append('description', description)
+                formData.append('isUpdateFile', true)
+                const data = await axios.put(`/api/films/${props.match.params.filmId}`, formData, {
+                    headers: {
+                        'Authorization': `JWT ${token}`
+                    }
+                }).catch(e => {
+                    message(e.response.data.message, "red")
+                })
+                message(data.data.message, "green")
+                setLoading(false)
+                history.push('/films/?page=1')
+            }
+        } catch (e) {
+            setLoading(false)
+        }
+    }
+
+    const handleUpdateArtistWithAvatar = async () => {
+        setLoading(true)
+        try {
+            if (!token) {
+                message("Вы не авторизованы", "red")
+                setLoading(false)
+            } else {
+                let formData = new FormData()
+                let relatedMoviesId = []
+                relatedFilms.map(value => relatedMoviesId.push(value._id))
+                let artistsId = []
+                artists.map(value => artistsId.push(value._id))
+                formData.append('name', name)
+                formData.append('year', year)
+                formData.append('file', file)
+                formData.append('country', country ? country.label : null)
+                formData.append('relatedMovies', relatedMoviesId)
+                formData.append('artists', artistsId)
+                formData.append('description', description)
+                formData.append('isUpdateFile', false)
+                const data = await axios.put(`/api/films/${props.match.params.filmId}`, formData, {
+                    headers: {
+                        'Authorization': `JWT ${token}`
+                    }
+                }).catch(e => {
+                    message(e.response.data.message, "red")
+                })
+                message(data.data.message, "green")
+                setLoading(false)
+                history.push('/films/?page=1')
+            }
+        } catch (e) {
+            setLoading(false)
+        }
+    }
+
+
     return (
-        <Autocomplete
-            id="country-select-demo"
-            options={countries}
-            value={country}
-            onChange={(event, value) => handleCountry(value)}
-            getOptionLabel={option => option.label}
-            renderOption={(option) => (
-                <React.Fragment>
-                    <span>{countryToFlag(option.code)}</span>
-                    {option.label} ({option.code})
-                </React.Fragment>
-            )}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label="Выберите страну"
-                    variant="outlined"
-                    inputProps={{
-                        ...params.inputProps,
-                        autoComplete: 'new-password',
-                    }}
-                />
-            )}
-        />
-    );
+        <div>
+
+            <div className="center">
+                <p className="flow-text"> Редактирование</p>
+            </div>
+            {!name || !year ? <div className='center'><CircularProgress сolor="secondary"/></div> : <div>
+                <div className="input-field col s6 padding-artist-params">
+                    <i className="material-icons prefix">account_circle</i>
+                    <input id="icon_prefix" placeholder='Название' type="text" className="validate"
+                           onChange={handleName}
+                           value={name}>
+                    </input>
+                </div>
+
+                <div className="input-field col s6 padding-artist-params">
+                    <i className="material-icons prefix">date_range</i>
+                    <input id="icon_prefix" placeholder='Год' type="number" className="validate"
+                           onChange={handleYear}
+                           value={year}>
+                    </input>
+                </div>
+
+                <div className="input-field  padding-artist-params">
+                    <i className="material-icons prefix">description</i>
+                    <textarea name="message"
+                              id="icon_prefix"
+                              className="materialize-textarea"
+                              onChange={handleDescription}
+                              placeholder='Описание'
+                              value={description}
+                              maxLength={700}/>
+
+                    <div className='right'>
+                        {`${description.length}/700`}
+                    </div>
+                </div>
+
+                <div className="file-field input-field" style={{paddingTop: "10px"}}>
+                    <div className="btn">
+                        <i className="material-icons">file_upload</i>
+                        <input ref={fileInputRef} type="file" accept="image/*"
+                               onChange={handleFile}/>
+                    </div>
+                    <div className="file-path-wrapper">
+                        <input className="file-path validate" id='fileNameFilm' type="text"
+                               placeholder="Загрузите постер фильма"/>
+                    </div>
+                </div>
+
+                <div className='padding-film-params' style={{paddingTop: "20px"}}>
+                    <CountryAutocomplete callback={handleCountry} country={country}/>
+                </div>
+
+                <div className='padding-film-params' style={{paddingTop: "20px"}}>
+                    <RelatedFilmsAutocompleteComponent callback={handleRelatedFilms} films={relatedFilms} forFilm={props.match.params.filmId}/>
+                </div>
+
+                <div className='padding-film-params' style={{paddingTop: "20px"}}>
+                    <ArtistsAutocompleteComponent callback={handleArtists} artists={artists}/>
+                </div>
+
+                {loading && <div className='center'><CircularProgress color="secondary"/></div>}
+                <div className='center' style={{"padding-top": '50px'}}>
+                    <a className="waves-effect waves-light btn-large" onClick={updateArtistDialog}><i
+                        className="material-icons left">send</i>Сохранить</a>
+                </div>
+            </div>}
+            <AlertDialogUpdateComponent open={open}
+                                        toClose={handleClose}
+                                        dialogTitle={dialogTitle}
+                                        dialogDescription='Это изменение вернуть назад будет невозможно!'
+                                        confirmDialog={handleUpdateArtist}
+                                        noConfirmDialog={handleUpdateArtistWithAvatar}
+                                        thirdButton='Назад'
+                                        acceptText='Удалить'
+                                        cancelText='Оставить'
+            />
+            <AlertDialogComponent open={open2}
+                                  toClose={handleClose2}
+                                  dialogTitle={dialogTitle}
+                                  dialogDescription='Это изменение вернуть назад будет невозможно!'
+                                  confirmDialog={handleUpdateArtist}
+                                  acceptText='Да'
+                                  cancelText='Нет'
+            />
+        </div>
+    )
 }
 
-// From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 const countries = [
     {code: 'AD', label: 'Andorra', phone: '376'},
     {code: 'AE', label: 'United Arab Emirates', phone: '971'},
@@ -296,3 +516,5 @@ const countries = [
     {code: 'ZM', label: 'Zambia', phone: '260'},
     {code: 'ZW', label: 'Zimbabwe', phone: '263'},
 ];
+
+export default UpdateFilmPage
