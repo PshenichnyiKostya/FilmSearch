@@ -8,7 +8,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function AlertDialogUpdateComponent({open, toClose, dialogDescription, dialogTitle, confirmDialog, thirdButton, acceptText, cancelText, noConfirmDialog}) {
 
-
     const handleClose = () => {
         toClose()
     }

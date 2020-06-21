@@ -5,12 +5,13 @@ import {AuthContext} from "../context/AuthContext";
 import {useMessage} from "../hooks/message.hook";
 import {useHttp} from "../hooks/http.hook";
 
-const Comment = ({comment,deleteComment}) => {
+const Comment = ({comment, deleteComment}) => {
 
     const [open, setOpen] = useState(false)
+    const auth = useContext(AuthContext)
     const {token} = useContext(AuthContext)
     const message = useMessage()
-    const {request, loading, error, clearError} = useHttp()
+    const {request, error, clearError} = useHttp()
 
     const MONTH_NAMES = [
         'Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня',
@@ -68,7 +69,6 @@ const Comment = ({comment,deleteComment}) => {
         const isYesterday = yesterday.toDateString() === date.toDateString();
         const isThisYear = today.getFullYear() === date.getFullYear();
 
-
         if (seconds < 5) {
             return 'now';
         } else if (seconds < 60) {
@@ -103,6 +103,7 @@ const Comment = ({comment,deleteComment}) => {
 
     const handleDeleteComment = async () => {
         try {
+
             const data = await request(`/api/comments/${comment._id}`, 'DELETE', {}, {
                 'Authorization':
                     `JWT ${token}`,
@@ -122,11 +123,12 @@ const Comment = ({comment,deleteComment}) => {
                      height={80}/>
                 <div className="media-body">
                     <h5 className="mt-0 mb-1">{comment.user.clientName}</h5>
+                    {(auth && auth.payload && (auth.payload.type === "Admin" || auth.payload.id == comment.user._id)) &&
                     <div className='delete-film-red'>
                         <a onClick={handleOpen}>
                             <i className="material-icons right">delete</i>
                         </a>
-                    </div>
+                    </div>}
                     <p>
                         <h10>{timeAgo(comment.timestamp)}</h10>
                     </p>
@@ -160,4 +162,5 @@ const Comment = ({comment,deleteComment}) => {
         </div>
     )
 }
+
 export default Comment

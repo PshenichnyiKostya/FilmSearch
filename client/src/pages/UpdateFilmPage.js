@@ -177,7 +177,7 @@ const UpdateFilmPage = ({...props}) => {
 
 
     return (
-        <div>
+        <div className='container'>
 
             <div className="center">
                 <p className="flow-text"> Редактирование</p>
@@ -231,7 +231,8 @@ const UpdateFilmPage = ({...props}) => {
                 </div>
 
                 <div className='padding-film-params' style={{paddingTop: "20px"}}>
-                    <RelatedFilmsAutocompleteComponent callback={handleRelatedFilms} films={relatedFilms} forFilm={props.match.params.filmId}/>
+                    <RelatedFilmsAutocompleteComponent callback={handleRelatedFilms} films={relatedFilms}
+                                                       forFilm={props.match.params.filmId}/>
                 </div>
 
                 <div className='padding-film-params' style={{paddingTop: "20px"}}>

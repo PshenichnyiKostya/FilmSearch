@@ -73,27 +73,29 @@ const ArtistsPage = ({location}) => {
     }
 
     return (
-        <div className={classes.root.toString()}>
-            <div className>
-                {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
+        <div className='container'>
+            <div className={classes.root.toString()}>
+                <div className>
+                    {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
 
-                    <SortComponentsArtists parentCallback={changeFilter} filter={filter}/>
+                        <SortComponentsArtists parentCallback={changeFilter} filter={filter}/>
 
-                    {error ? <NoItems error={error}/> : <div>
-                        <ul className="collection">
-                            {artists.map(artist =>
-                                <li key={artist._id}>
-                                    <PaginationArtistItem artist={artist} deleteArtist={handleAfterDelete}/>
-                                </li>
-                            )}
-                        </ul>
-                        <Typography>Page: {page}</Typography>
+                        {error ? <NoItems error={error}/> : <div>
+                            <ul className="collection">
+                                {artists.map(artist =>
+                                    <li key={artist._id}>
+                                        <PaginationArtistItem artist={artist} deleteArtist={handleAfterDelete}/>
+                                    </li>
+                                )}
+                            </ul>
+                            <Typography>Page: {page}</Typography>
 
-                        <Pagination count={maxPage} page={Number(page)} onChange={handleChange}/>
+                            <Pagination count={maxPage} page={Number(page)} onChange={handleChange}/>
+                        </div>}
                     </div>}
-                </div>}
-            </div>
+                </div>
 
+            </div>
         </div>
     );
 }

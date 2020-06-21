@@ -148,12 +148,15 @@ filmRouter.delete('/:filmId', passport.authenticate('jwt'), async (req, res) => 
         }
         const film = await Film.findById(req.params.filmId)
         if (!film) {
+            console.log('1')
             return res.status(400).json({message: "Фильм не найден"})
         } else {
-            try {
-                fs.unlinkSync(`client/src/${film.image}`)
-            } catch (e) {
-                return res.status(500).json({message: "Что-то пошло не так!("})
+            if (film.image) {
+                try {
+                    fs.unlinkSync(`client/src/${film.image}`)
+                } catch (e) {
+                    return res.status(500).json({message: "Что-то пошло не так!("})
+                }
             }
             await Comment.find({film: film}).deleteMany()
             await Artist.find({films: {"$in": [film]}}).updateMany({$pull: {films: film._id}})

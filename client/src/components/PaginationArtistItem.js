@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {useHistory} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
 import {useHttp} from "../hooks/http.hook";
@@ -7,10 +7,10 @@ import AlertDialogComponent from "./AlertDialogComponent";
 
 const PaginationArtistItem = ({artist, deleteArtist}) => {
 
-    const auth = useContext(AuthContext)
     const [open, setOpen] = useState(false)
-    const {request} = useHttp()
+    const {request, clearError, error} = useHttp()
     const message = useMessage()
+    const auth = useContext(AuthContext)
     const {token} = useContext(AuthContext)
     const history = useHistory()
 
@@ -28,6 +28,11 @@ const PaginationArtistItem = ({artist, deleteArtist}) => {
         let day = date.getDate()
         return months[month].toString() + " " + day + ", "
     }
+
+    useEffect(() => {
+        message(error, "red")
+        clearError()
+    }, [error, message, clearError])
 
     const handleToFilms = (e) => {
         e.preventDefault()
@@ -80,7 +85,7 @@ const PaginationArtistItem = ({artist, deleteArtist}) => {
                     </div>
                     <div className="card-action">
                         <a href="#" onClick={handleToFilms}>На страницу актера</a>
-                        {auth.payload && auth.payload.type === "Admin" && <span>
+                        {auth && auth.payload && auth.payload.type === "Admin" && <span>
                             <a className='delete-film-green' onClick={handleUpdateArtist}>
                                 <i className="material-icons right">edit</i>
                             </a>

@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper,
         marginTop: theme.spacing(8),
         padding: theme.spacing(6, 0),
+        'background-image': 'url(https://365psd.ru/images/backgrounds/light-gray-wall.jpg)',
     },
 }));
 
@@ -33,7 +34,7 @@ export default function Footer(props) {
     return (
         <footer className={classes.footer}>
             <Container maxWidth="lg">
-                <Typography variant="h6" align="center" gutterBottom>
+                <Typography variant="h6" align="center" gutterBottom style={{marginTop: '30px'}}>
                     {title}
                 </Typography>
                 <Typography variant="subtitle1" align="center" color="textSecondary" component="p">

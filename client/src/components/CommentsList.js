@@ -46,10 +46,9 @@ const CommentsList = ({filmId}) => {
 
     const handleAfterDelete = async () => {
         try {
-            console.log("qweqwe")
             let data
             if (comments.length === 1) {
-                data = await request(`/api/comments/${filmId}?page=${commentPage-1}`, 'GET')
+                data = await request(`/api/comments/${filmId}?page=${commentPage - 1}`, 'GET')
             } else {
                 data = await request(`/api/comments/${filmId}?page=${commentPage}`, 'GET')
             }
@@ -91,7 +90,7 @@ const CommentsList = ({filmId}) => {
                 {comments.length === 0 ? <NoItems error={error}/> : <div>
                     <ul className="list-unstyled">
                         {comments.map((comment =>
-                                <li id={comment._id}>
+                                <li id={comment._id} key={comment._id}>
                                     <Comment comment={comment} deleteComment={handleAfterDelete}/>
                                 </li>
                         ))}

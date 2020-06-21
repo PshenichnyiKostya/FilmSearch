@@ -70,25 +70,27 @@ const FilmsPage = ({location}) => {
     }
 
     return (
-        <div className={classes.root}>
-            <div>
-                {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
-                    <SortComponentFilms parentCallback={changeFilter} filter={filter}/>
-                    {error ? <NoItems error={error}/> : <div>
-                        <ul className="collection">
-                            {films.map(film =>
-                                <li key={film._id}>
-                                    <PaginationFilmItem film={film} deleteFilm={handleAfterDelete}/>
-                                </li>
-                            )}
-                        </ul>
-                        <Typography>Page: {page}</Typography>
+        <div className='container'>
+            <div className={classes.root}>
+                <div>
+                    {loading ? <div className="center"><CircularProgress color="secondary"/></div> : <div>
+                        <SortComponentFilms parentCallback={changeFilter} filter={filter}/>
+                        {error ? <NoItems error={error}/> : <div>
+                            <ul className="collection">
+                                {films.map(film =>
+                                    <li key={film._id}>
+                                        <PaginationFilmItem film={film} deleteFilm={handleAfterDelete}/>
+                                    </li>
+                                )}
+                            </ul>
+                            <Typography>Page: {page}</Typography>
 
-                        <Pagination count={maxPage} page={Number(page)} onChange={handleChange}/>
+                            <Pagination count={maxPage} page={Number(page)} onChange={handleChange}/>
+                        </div>}
                     </div>}
-                </div>}
-            </div>
+                </div>
 
+            </div>
         </div>
     );
 

@@ -18,7 +18,7 @@ export const NavBar = () => {
         e.preventDefault()
         history.push('/registration')
     }
-    const onUploadPage=(e)=>{
+    const onUploadPage = (e) => {
         e.preventDefault()
         history.push('/upload')
     }

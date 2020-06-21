@@ -36,41 +36,41 @@ const AuthPage = () => {
         }
     }
     return (
-        <div className='row'>
-            <div className="col s6 offset-s3">
-                <h1 className='center'>ФильмоПоиск</h1>
-                {loading && <div className="center"><CircularProgress color="secondary"/></div>}
-                <div className="card blue-grey darken-1">
-                    <div className="card-content white-text">
-                        <span className="card-title">Авторизация</span>
-                        <div className="input-field ">
-                            <input id="email" type="email" name='email' className="validate" onChange={changeHandler}/>
-                            <label htmlFor="email">Email</label>
+        <div className='container'>
+            <div className='row'>
+                <div className="col s6 offset-s3">
+                    <h1 className='center'>ФильмоПоиск</h1>
+                    {loading && <div className="center"><CircularProgress color="secondary"/></div>}
+                    <div className="card blue-grey darken-1">
+                        <div className="card-content white-text">
+                            <span className="card-title">Авторизация</span>
+                            <div className="input-field ">
+                                <input id="email" type="email" name='email' className="validate"
+                                       onChange={changeHandler}/>
+                                <label htmlFor="email">Email</label>
+                            </div>
+                            <div className="input-field">
+                                <input id="password" type="password" name='password' className="validate"
+                                       onChange={changeHandler}/>
+                                <label htmlFor="password">Password</label>
+                            </div>
                         </div>
-                        <div className="input-field">
-                            <input id="password" type="password" name='password' className="validate"
-                                   onChange={changeHandler}/>
-                            <label htmlFor="password">Password</label>
+                        <div className="card-action">
+                            <button
+                                className="waves-effect waves-light btn margin-10"
+                                disabled={loading}
+                                onClick={loginHandler}
+                            >
+                                Войти
+                            </button>
+                            <button
+                                className="waves-effect waves-light btn margin-10"
+                                disabled={loading}
+                                onClick={handleRegisterPage}
+                            >
+                                На страницу регистрации
+                            </button>
                         </div>
-                    </div>
-                    <div className="card-action">
-                        <button
-                            className="waves-effect waves-light btn margin-10"
-                            disabled={loading}
-                            onClick={loginHandler}
-                        >
-                            Войти
-                        </button>
-                        <button
-                            className="waves-effect waves-light btn margin-10"
-                            disabled={loading}
-                            onClick={handleRegisterPage}
-                        >
-                            На страницу регистрации
-                        </button>
-                    </div>
-                    <div className="card-action">
-
                     </div>
                 </div>
             </div>

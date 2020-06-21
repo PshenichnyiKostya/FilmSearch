@@ -136,7 +136,7 @@ const UpdateArtistPage = ({...props}) => {
     }
 
     return (
-        <div>
+        <div className='container'>
             {!name || !date ? <div className='center'><CircularProgress сolor="secondary"/></div> :
                 <div className='date-height'>
                     <div className="center">

@@ -107,10 +107,12 @@ artistRouter.delete('/:artistId', passport.authenticate('jwt'), async (req, res)
         if (!artist) {
             return res.status(400).json({message: "Актер не найден"})
         } else {
-            try {
-                fs.unlinkSync(`client/src/${artist.image}`)
-            } catch (e) {
-                return res.status(500).json({message: "Что-то пошло не так!("})
+            if (artist.image) {
+                try {
+                    fs.unlinkSync(`client/src/${artist.image}`)
+                } catch (e) {
+                    return res.status(500).json({message: "Что-то пошло не так!("})
+                }
             }
             await Film.find({artists: {"$in": [artist]}}).updateMany({$pull: {artists: artist._id}})
             await artist.deleteOne()

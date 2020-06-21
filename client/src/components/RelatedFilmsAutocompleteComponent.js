@@ -22,15 +22,6 @@ const RelatedFilmsAutocompleteComponent = ({callback, films, forFilm}) => {
     const [open, setOpen] = useState(false);
     const loading = open && options.length === 0;
 
-    // function search(a, b) {
-    //     let result = [];
-    //     a.forEach(function (v) {
-    //         if (b.indexOf(v) === -1) {
-    //             result.push(v);
-    //         }
-    //     });
-    //     return result;
-    // }
 
     React.useEffect(() => {
         if (!loading) {
@@ -39,16 +30,6 @@ const RelatedFilmsAutocompleteComponent = ({callback, films, forFilm}) => {
         (async () => {
             try {
                 const data = await request('/api/films/all', 'GET')
-                // await sleep(1e3); // For demo purposes.
-                // setOptions(search(films, data.films))
-
-                // const allFilms = data.films
-                // for (let i = 0; i < allFilms.length; i++) {
-                //     if (allFilms[i]._id === forFilm) {
-                //         allFilms.splice(i, 1)
-                //         break
-                //     }
-                // }
                 setOptions(data.films)
             } catch (e) {
             }

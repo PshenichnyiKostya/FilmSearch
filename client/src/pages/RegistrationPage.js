@@ -30,7 +30,7 @@ const RegistrationPage = () => {
         }
     }
     return (
-        <div className='row'>
+        <div className='row container'>
             <div className="col s6 offset-s3">
                 <h1 className='center'>ФильмоПоиск</h1>
                 <div className="card blue-grey darken-1">

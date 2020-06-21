@@ -71,16 +71,24 @@ commentsRouter.post('/:filmId', passport.authenticate('jwt'), async (req, res) =
 
 commentsRouter.delete('/:commentId', passport.authenticate('jwt'), async (req, res) => {
     try {
+        console.log('sosi')
         const user = await User.findById(req.user)
-        if (!user || user.type !== "Admin") {
-            return res.status(401).json({message: "Вы не авторизованы как администратор"})
-        }
         const comment = await Comment.findById(req.params.commentId)
-        if (!comment) {
-            return res.status(400).json({message: "Комментарий не найден"})
+
+        if (user && (user.type === "Admin" || user.equals(comment.user))) {
+            if (!comment) {
+                return res.status(400).json({message: "Комментарий не найден"})
+            } else {
+                await comment.deleteOne()
+                return res.status(200).json({message: "Комментарий успешно удален"})
+            }
         } else {
-            await comment.deleteOne()
-            return res.status(200).json({message: "Комментарий успешно удален"})
+            if (!user || user.type !== "Admin") {
+                return res.status(401).json({message: "Вы не авторизованы как администратор"})
+            }
+            if ((!user || user._id !== comment.user._id)) {
+                return res.status(401).json({message: 'Это не ваш комментрий'})
+            }
         }
     } catch (e) {
         return res.status(500).json({message: "Что-то пошло не так!("})
